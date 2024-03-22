@@ -8,23 +8,28 @@ import TableToChuc from '../components/TableToChuc';
 import TableCaNhan from '../components/TableCaNhan';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import axios from 'axios';
 
 export default function ListBHYT() {
 
   const [quan, setQuan] = React.useState('');
-
+  const [phuong, setPhuong] = React.useState('');
   const handleQuanChange = (event) => {
     setQuan(event.target.value);
+    if(event.target.value===''){
+      setPhuong(null);
+    }
     console.log("Quận:", quan);
   };
 
-  const [phuong, setPhuong] = React.useState('');
+
 
   const handlePhuongChange = (event) => {
     setPhuong(event.target.value);
     console.log("Phường:", phuong);
 
   };
+  const [caNhanTP, setCaNhanTP] =useState(false);
 
 
   const [state, setState] = React.useState({
@@ -34,7 +39,6 @@ export default function ListBHYT() {
   });
 
   const handleChange = (event) => {
-    setToChucList([]);
     setState({
       ...state,
       [event.target.name]: event.target.checked,
@@ -88,113 +92,288 @@ export default function ListBHYT() {
 
   console.log("quanDetail:", quanDetail);
   console.log("phuongDetail:", phuongDetail);
+  console.log("toChucDetail", toChucDetail);
 
-  const [hoGiaDinhList, setHoGiaDinhList] = useState([]);
-  const [isLoadingGD, setIsLoadingGD] = useState(true);
-  const [errorGD, setErrorGD] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://26.164.228.111:8080/getallhogiadinh');
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const jsonData = await response.json();
-        setHoGiaDinhList(jsonData);
-      } catch (error) {
-        setErrorGD(error);
-      } finally {
-        setIsLoadingGD(false);
-      }
+  const [response, setResponse] = useState(null);
+  const [errorKQ, setErrorKQ] = useState(null);
+useEffect(()=>{
+  
+  const fetchDataKQ = async () => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        quan: quan||quanDetail||null,
+        phuong: phuong||phuongDetail|| null,
+        congTy: state.cty,
+        truongHoc: state.truong,
+        hoGiaDinh: state.gd
+      })
     };
 
-    fetchData();
-  }, []);
-
-  const [congTyList, setCongTyList] = useState([]);
-  const [isLoadingCT, setIsLoadingCT] = useState(true);
-  const [errorCT, setErrorCT] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://26.164.228.111:8080/getallcongty');
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const jsonData = await response.json();
-        setCongTyList(jsonData);
-      } catch (error) {
-        setErrorCT(error);
-      } finally {
-        setIsLoadingCT(false);
+    try {
+      const res = await fetch('http://26.164.228.111:8080/query', requestOptions);
+      if (!res.ok) {
+        throw new Error('Network response was not ok');
       }
-    };
+      const data = await res.json();
+      setResponse(data);
+      setErrorKQ(null);
+    } catch (error) {
+      setErrorKQ('Error fetching data');
+      setResponse(null);
+    }
+  };
+  fetchDataKQ();
+},[quan,quanDetail, phuong, phuongDetail ,state.cty, state.truong, state.gd])
 
-    fetchData();
-  }, []);
+  // const [response, setResponse] = useState(null);
+  // const [errorKQ, setErrorKQ] = useState(null);
+
+  // const fetchDataKQ = async () => {
+  //   try {
+  //     const response = await axios.get('http://26.164.228.111:8080/query', {
+  //       params: {
+  //         quan: quan||quanDetail||null,
+  //         phuong: phuong||phuongDetail|| null,
+  //         congTy: state.cty,
+  //         truongHoc: state.truong,
+  //         hoGiaDinh: state.gd
+  //       }
+  //     });
+  //     setResponse(response.data);
+  //     setErrorKQ(null);
+  //   } catch (error) {
+  //     setErrorKQ('Error fetching data');
+  //     setResponse(null);
+  //   }
+  // };
+
+ console.log('response', response);
+ console.log('quan', quan);
+ console.log('quanDetail', quanDetail);
+ console.log('phuong', phuong);
+ console.log('phuongDetail', phuongDetail);
+ console.log('state.cty', state.cty);
+ console.log('state.truong', state.truong);
+ console.log('state.gd', state.gd);
+
+ 
+  // const [hoGiaDinhList, setHoGiaDinhList] = useState([]);
+  // const [isLoadingGD, setIsLoadingGD] = useState(true);
+  // const [errorGD, setErrorGD] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch('http://26.164.228.111:8080/getallhogiadinh');
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch data');
+  //       }
+  //       const jsonData = await response.json();
+  //       setHoGiaDinhList(jsonData);
+  //     } catch (error) {
+  //       setErrorGD(error);
+  //     } finally {
+  //       setIsLoadingGD(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  // const [congTyList, setCongTyList] = useState([]);
+  // const [isLoadingCT, setIsLoadingCT] = useState(true);
+  // const [errorCT, setErrorCT] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch('http://26.164.228.111:8080/getallcongty');
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch data');
+  //       }
+  //       const jsonData = await response.json();
+  //       setCongTyList(jsonData);
+  //     } catch (error) {
+  //       setErrorCT(error);
+  //     } finally {
+  //       setIsLoadingCT(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
 
-  const [truongList, setTruongList] = useState([]);
-const [isLoadingTruong, setIsLoadingTruong] = useState(true);
-const [errorTruong, setErrorTruong] = useState(null);
+//   const [truongList, setTruongList] = useState([]);
+// const [isLoadingTruong, setIsLoadingTruong] = useState(true);
+// const [errorTruong, setErrorTruong] = useState(null);
+
+// useEffect(() => {
+//   const fetchData = async () => {
+//     try {
+//       const response = await fetch('http://26.164.228.111:8080/getalltruonghoc');
+//       if (!response.ok) {
+//         throw new Error('Failed to fetch data');
+//       }
+//       const jsonData = await response.json();
+//       setTruongList(jsonData);
+//     } catch (error) {
+//       setErrorTruong(error);
+//     } finally {
+//       setIsLoadingTruong(false);
+//     }
+//   };
+
+//   fetchData();
+// }, []);
+
+const [allCaNhan, setAllCaNhan] = useState([]);
+const [isLoadingCaNhan, setIsLoadingCaNhan] = useState(true);
+const [errorCaNhan, setErrorCaNhan] = useState(null);
 
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const response = await fetch('http://26.164.228.111:8080/getalltruonghoc');
+      const response = await fetch('http://26.164.228.111:8080/getallcanhan');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
       const jsonData = await response.json();
-      setTruongList(jsonData);
+      setAllCaNhan(jsonData);
     } catch (error) {
-      setErrorTruong(error);
+      setErrorCaNhan(error);
     } finally {
-      setIsLoadingTruong(false);
+      setIsLoadingCaNhan(false);
     }
   };
 
   fetchData();
 }, []);
-console.log(truongList);
-
-  const [toChucList, setToChucList] = useState([...congTyList, ...hoGiaDinhList, ...truongList]);
-  
-useEffect(()=>{
-  if ((state.cty && state.gd && state.truong) ||(state.cty===false && state.gd===false && state.truong===false)) {
-    setToChucList([...congTyList, ...hoGiaDinhList, ...truongList]);
-  } else if (state.cty &&  state.gd) {
-    setToChucList([...congTyList, ...hoGiaDinhList]);
-  } else if (state.cty &&  state.truong) {
-    setToChucList([...congTyList, ...truongList]);
-  }
-    else if (state.gd &&  state.truong) {
-      setToChucList([...truongList, ...hoGiaDinhList]);
-    }
-    else if(state.cty){
-      setToChucList(congTyList);
-    }
-    else if(state.gd){
-      setToChucList(hoGiaDinhList);
-    }
-    else if(state.truong){
-      setToChucList(truongList);
-    }
-  // if(state.cty){
-  //   setToChucList([...congTyList]);
-  // }
-  // if(state.gd){
-  //   setToChucList([...hoGiaDinhList]);
-  // }
-  // if(state.truong){
-  //   setToChucList([...truongList]);
-  // }
-},[state.cty, state.gd, state.truong])
 
 
-console.log('congTyList', congTyList)
+const [caNhanPhuong, setCaNhanPhuong] = useState(null);
+
+useEffect(() => {
+  const phuongFinal=  phuong||phuongDetail||null;
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantrongphuong',
+        phuongFinal, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanPhuong(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [phuong, phuongDetail]); 
+
+console.log("caNhanPhuong", caNhanPhuong)
+
+
+
+const [caNhanToChuc, setCaNhanToChuc] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantrongtochuc',
+        toChucDetail, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanToChuc(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [toChucDetail]); 
+
+console.log("caNhanToChuc", caNhanToChuc)
+
+
+
+const [caNhanQuan, setCaNhanQuan] = useState(null);
+
+useEffect(() => {
+  const quanFinal=  quan||quanDetail||null;
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantrongquan',
+        quanFinal, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanQuan(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [quan, quanDetail]); 
+
+console.log("caNhanQuan", caNhanQuan)
+
+// console.log('allCaNhan', allCaNhan);
+// var list =[...congTyList, ...hoGiaDinhList, ...truongList];
+// console.log('List',list);
+//   const [toChucList, setToChucList] = useState(list);
+// console.log('toChucList', toChucList)
+// // ||(state.cty===false && state.gd===false && state.truong===false
+// useEffect(()=>{
+//   if ((state.cty && state.gd && state.truong)||(state.cty===false && state.gd===false && state.truong===false)) {
+//     setToChucList([...congTyList, ...hoGiaDinhList, ...truongList]);
+//   } else if (state.cty &&  state.gd) {
+//     setToChucList([...congTyList, ...hoGiaDinhList]);
+//   } else if (state.cty &&  state.truong) {
+//     setToChucList([...congTyList, ...truongList]);
+//   }
+//     else if (state.gd &&  state.truong) {
+//       setToChucList([...truongList, ...hoGiaDinhList]);
+//     }
+//     else if(state.cty){
+//       setToChucList(congTyList);
+//     }
+//     else if(state.gd){
+//       setToChucList(hoGiaDinhList);
+//     }
+//     else if(state.truong){
+//       setToChucList(truongList);
+//     }
+//   // if(state.cty){
+//   //   setToChucList([...congTyList]);
+//   // }
+//   // if(state.gd){
+//   //   setToChucList([...hoGiaDinhList]);
+//   // }
+//   // if(state.truong){
+//   //   setToChucList([...truongList]);
+//   // }
+// },[state.cty, state.gd, state.truong])
+
+
+// console.log('congTyList', congTyList)
 
 const [phuongList, setPhuongList] = useState([]);
 const [isLoadingPhuong, setIsLoadingPhuong] = useState(true);
@@ -263,24 +442,25 @@ useEffect(() => {
     }
   });
 
-  const filteredToChucList = toChucList.filter(item => {
-    if (phuong !== '') {
-      return item.idBHYTPhuong === phuong;
-    } else if (phuongDetail !== '') {
-      return item.idBHYTPhuong === phuongDetail;
-    }
-  });
-  console.log('toChucList', toChucList);
-  console.log('filteredToChucList', filteredToChucList)
+  // const filteredToChucList = toChucList.filter(item => {
+  //   if (phuong !== '') {
+  //     return item.idBHYTPhuong === phuong;
+  //   } else if (phuongDetail !== '') {
+  //     return item.idBHYTPhuong === phuongDetail;
+  //   }
+  // });
+  // console.log('toChucList', toChucList);
+  // console.log('filteredToChucList', filteredToChucList)
 
 
   
   
   return (
     <Box style={{
-        backgroundColor: '#ccc',
+        backgroundColor: 'white',
         width: '100%',
-        height: 'auto'
+        height: 1200,
+        
     }}>
         <Box style={{
             position: 'fixed',
@@ -317,7 +497,7 @@ useEffect(() => {
                     </Select>
                     {/* <FormHelperText>Disabled</FormHelperText> */}
                 </FormControl>
-                <FormControl sx={{ marginRight: '100px', marginLeft: '100px',marginTop:'15px', minWidth: 200 }}>
+                <FormControl sx={{ marginRight: '100px', marginLeft: '105px',marginTop:'15px', minWidth: 258 }}>
                     <InputLabel id="demo-simple-select-helper-label">Quận</InputLabel>
                     <Select
                     labelId="demo-simple-select-helper-label"
@@ -337,7 +517,7 @@ useEffect(() => {
                     ))}
                     </Select>
                 </FormControl>
-                <FormControl sx={{ m: 2, minWidth: 250 }}>
+                <FormControl sx={{ m: 2, minWidth: 258 }}>
                     <InputLabel id="demo-simple-select-helper-label">Phường</InputLabel>
                     <Select
                     labelId="demo-simple-select-helper-label"
@@ -386,18 +566,27 @@ useEffect(() => {
                    
                 </Box>
 
-                <Box>
+                <Box style={{
+                  display:'flex',
+                  paddingTop: 60
+                }}>
+                <Box style={{
+                  // width: 200,
+                  paddingRight: 116
+                }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                {/* <DemoContainer components={['DatePicker']}> */}
-                    <DatePicker label="Basic date picker" />
-                {/* </DemoContainer> */}
+                    <DatePicker label="Chọn ngày bắt đầu" />
                 </LocalizationProvider>
+                </Box>
 
+                <Box style={{
+                  // width: 200,
+                  // paddingRight: 110
+                }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                {/* <DemoContainer components={['DatePicker']}> */}
-                    <DatePicker label="Basic date picker" />
-                {/* </DemoContainer> */}
+                    <DatePicker label="Chọn ngày kết thúc" />
                 </LocalizationProvider>
+                </Box>
                     
                 </Box>
             </Box>
@@ -406,69 +595,125 @@ useEffect(() => {
                 justifyContent:'space-between'
             }}>
             <Box>
-            <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">Lọc theo</FormLabel>
-                <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    defaultValue="1"
-                    name="radio-buttons-group"
-                >
-                    <FormControlLabel value="1" control={<Radio />} label="Đã đóng" />
-                    <FormControlLabel value="2" control={<Radio />} label="Chưa đóng" />
-                </RadioGroup>
-                </FormControl>
+            
             </Box>
-            <Box style={{
-                paddingTop: 40
-            }}>
-                <Button>Danh sách cá nhân</Button>
-            </Box>
+            
             </Box>
             </Box>
             <Box style={{
                 marginTop: '100px',
                 marginLeft: '50px'
             }}>
-                 <Button variant="contained">Lọc</Button>
+                 <Button variant="contained" >Lọc</Button>
             </Box>
         </Box>
-        <Box style ={{ display:'flex', justifyContent:'center', width: '100%'}}>
+        <Box style ={{ display:'flex', justifyContent:'center', width: '100%', marginTop: 60}}>
           <Box style={{width: '80%'}} >
-         {quan==='' && quanDetail==='' && (
+
+         {caNhanTP===false && (quan==='' && quanDetail==='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
             <TableQuan style={{width: '100%'}}
             setQuanDetail={setQuanDetail}
-            data={data}
+            response={response||data}
+            setCaNhanTP={setCaNhanTP}
             ></TableQuan>
          )}
-         {phuong==='' && quan!=='' &&  phuongDetail ==='' && (
-            <TablePhuong style={{width: '100%'}}
-            setPhuongDetail={setPhuongDetail}
-            filteredPhuongList={filteredPhuongList}></TablePhuong>
+
+         {
+          caNhanTP && (quan==='' && quanDetail==='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={allCaNhan}
+            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+          )
+         }
+
+
+
+          
+        {toChucDetail==='' && caNhanTP === false && (state.cty !== false || state.truong!==false || state.gd!== false) && (
+          <TableToChuc 
+          response={response} 
+          setCaNhanTP={setCaNhanTP}
+          setToChucDetail={setToChucDetail}>
+
+          </TableToChuc>
          )}
 
-         {quanDetail !=='' && phuongDetail ==='' &&(
-            <TablePhuong style={{width: '100%'}}
-            setPhuongDetail={setPhuongDetail}
-            filteredPhuongList={filteredPhuongList}></TablePhuong>
+         {
+          (caNhanTP)  && (state.cty !== false || state.truong!==false || state.gd!== false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanPhuong}
+            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+          )
+         }
+
+         {
+          (toChucDetail!=='')  && (state.cty !== false || state.truong!==false || state.gd!== false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanToChuc}
+            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+          )
+         }
+
+
+         {toChucDetail==='' && caNhanTP ===false && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+          <TableToChuc 
+          response={response} 
+          setCaNhanTP={setCaNhanTP}
+          setToChucDetail={setToChucDetail}>
+
+          </TableToChuc>
          )}
 
-         {/* {phuongDetail !==''&& toChucDetail===''&& (phuong!==''|| phuongDetail!=='')&&(
-            <TableToChuc style={{width: '100%'}}
-            setToChucDetail={setToChucDetail}
-            filteredToChucList={filteredToChucList}></TableToChuc>
-         )} */}
          {
-            (quan !=='' || quanDetail!=='') &&  (phuong!==''|| phuongDetail!=='') && toChucDetail===''&&(
-                <TableToChuc style={{width: '100%'}}
-                setToChucDetail={setToChucDetail}
-                filteredToChucList={filteredToChucList}></TableToChuc>
-            )
+          (caNhanTP) && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanPhuong }
+            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+          )
          }
+
          {
-            toChucDetail !=='' && (
-                <TableCaNhan style={{width: '100%'}}></TableCaNhan>
-            )
+          (toChucDetail!=='') && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanToChuc }
+            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+          )
          }
+
+        
+         {caNhanTP===false &&(quan!=='' || quanDetail!=='') &&(phuong==='' && phuongDetail==='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TablePhuong style={{width: '100%'}}
+            setPhuongDetail={setPhuongDetail}
+            response={response}
+            setCaNhanTP={setCaNhanTP}
+            ></TablePhuong>
+         )}
+
+
+         {
+          (caNhanTP)  &&(quan!=='' || quanDetail!=='') &&(phuong==='' && phuongDetail==='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanQuan}
+            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+          )
+         }
+
+         {caNhanTP===false &&(quan==='' && quanDetail==='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TablePhuong style={{width: '100%'}}
+            setPhuongDetail={setPhuongDetail}
+            response={response}
+            ></TablePhuong>
+         )}
+
+         {
+          (caNhanTP) &&(quan==='' && quanDetail==='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanQuan}
+            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+          )
+         }
+
+
           </Box>
         </Box>
     </Box>

@@ -1,6 +1,8 @@
 import React from 'react'
 import Header from '../components/Header'
 import { Box, Button, FormControl, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 export default function Configuration() {
   return (
@@ -275,6 +277,24 @@ export default function Configuration() {
             </Box>
             
         </Box>
+
+        <Box style={{display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '50px'}}>
+                        <Box style={{
+                           
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center', 
+                            paddingRight: 30
+                        }}>
+                            <Typography>Thời gian bắt đầu có hiệu lực của cấu hình</Typography>
+                        </Box>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker label="Chọn ngày bắt đầu" />
+                        </LocalizationProvider>
+                    </Box>
         <Box style={{
             display: 'flex',
             justifyContent: 'center',

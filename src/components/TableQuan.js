@@ -21,7 +21,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import { Button } from '@mui/material';
+import { Button, FormControl, FormLabel, Radio, RadioGroup } from '@mui/material';
 
 function createData(idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu) {
   return {
@@ -203,7 +203,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, setCaNhanTP } = props;
 
   return (
     <Toolbar
@@ -226,14 +226,53 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
+        <Box style={{
+          display:'flex',
+          width: '100%',
+          justifyContent: 'space-between',
+          padding: 20,
+        }}>
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          // sx={{ flex: '1 1 100%' }}
           variant="h6"
           id="tableTitle"
           component="div"
         >
-          Danh sách BHYT
+          Danh sách BHYT các Quận của thành phố Hà Nội
         </Typography>
+      <Box>
+      <FormControl style={{
+        display:'flex'
+        }}>
+                <FormLabel id="demo-radio-buttons-group-label">Lọc theo</FormLabel>
+                <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    defaultValue="1"
+                    name="radio-buttons-group"
+                    // style={{display:'flex'}}
+                >
+                    <FormControlLabel value="1" control={<Radio />} label="Đã đóng" />
+                    <FormControlLabel value="2" control={<Radio />} label="Chưa đóng" />
+                    <FormControlLabel value="2" control={<Radio />} label="Cả hai" />
+                </RadioGroup>
+                </FormControl>
+      </Box>
+          <Box style={{
+                paddingTop: 40
+            }}>
+                <Button variant="contained" sx={{
+                  marginRight: 10,
+                }}
+                onClick={()=>{
+                  setCaNhanTP(true);
+                 
+                }}>Danh sách cá nhân</Button>
+                <Button variant="contained" onClick={()=>{
+                  setCaNhanTP(false);
+                 
+                }}>Quay lại</Button>
+            </Box>
+        </Box>
       )}
 
       {numSelected > 0 ? (
@@ -257,7 +296,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TableQuan({setQuanDetail, data}) {
+export default function TableQuan({setQuanDetail, response, setCaNhanTP}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -328,10 +367,19 @@ export default function TableQuan({setQuanDetail, data}) {
   );
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
+    <Box sx={{ 
+      width: '100%', 
+    shadowColor: 'black',
+    shadowOffset: { width: 10, height: 5 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    borderWidth: 2,
+    // border
+      }}>
+      <Paper sx={{ width: '100%', mb: 2 }} >
+        <EnhancedTableToolbar numSelected={selected.length} setCaNhanTP={setCaNhanTP} />
+        <TableContainer >
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
@@ -346,20 +394,21 @@ export default function TableQuan({setQuanDetail, data}) {
               rowCount={rows.length}
             />
             <TableBody>
-              {data.map((row, index) => {
+              {response.map((row, index) => {
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    // onClick={(event) => handleClick(event, row.id)}
+                    onClick={(event) => handleClick(event, row.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
+                    
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
@@ -370,7 +419,6 @@ export default function TableQuan({setQuanDetail, data}) {
                         }}
                       />
                     </TableCell>
-{/* // idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu */}
                     <TableCell
                       component="th"
                       id={labelId}

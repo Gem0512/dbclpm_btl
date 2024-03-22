@@ -21,6 +21,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { Button, FormControl, FormLabel, Radio, RadioGroup } from '@mui/material';
 
 function createData(id, ten, diaChi, tuoi, mucDong, trangThai, ghiChu, kiHan, thoiGian) {
   return {
@@ -190,7 +191,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, setCaNhanTP } = props;
 
   return (
     <Toolbar
@@ -213,14 +214,53 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
+        <Box style={{
+          display:'flex',
+          width: '100%',
+          justifyContent: 'space-between',
+          padding: 20,
+        }}>
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          // sx={{ flex: '1 1 100%' }}
           variant="h6"
           id="tableTitle"
           component="div"
         >
-          Danh sách BHYT
+          Danh sách BHYT cá nhân 
         </Typography>
+      <Box>
+      <FormControl style={{
+        display:'flex'
+        }}>
+                <FormLabel id="demo-radio-buttons-group-label">Lọc theo</FormLabel>
+                <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    defaultValue="1"
+                    name="radio-buttons-group"
+                    // style={{display:'flex'}}
+                >
+                    <FormControlLabel value="1" control={<Radio />} label="Đã đóng" />
+                    <FormControlLabel value="2" control={<Radio />} label="Chưa đóng" />
+                    <FormControlLabel value="2" control={<Radio />} label="Cả hai" />
+                </RadioGroup>
+                </FormControl>
+      </Box>
+          <Box style={{
+                paddingTop: 40
+            }}>
+                <Button variant="contained" sx={{
+                  marginRight: 10,
+                }}
+                onClick={()=>{
+                  setCaNhanTP(true);
+                 
+                }}>Danh sách cá nhân</Button>
+                <Button variant="contained" onClick={()=>{
+                  setCaNhanTP(false);
+                 
+                }}>Quay lại </Button>
+            </Box>
+        </Box>
       )}
 
       {numSelected > 0 ? (
@@ -244,7 +284,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TableCaNhan() {
+export default function TableCaNhan({allCaNhan, setCaNhanTP}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -317,7 +357,7 @@ export default function TableCaNhan() {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} setCaNhanTP={setCaNhanTP} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -333,7 +373,7 @@ export default function TableCaNhan() {
               rowCount={rows.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
+              {allCaNhan.map((row, index) => {
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -363,7 +403,7 @@ export default function TableCaNhan() {
                       scope="row"
                       padding="none"
                     >
-                      {row.id}
+                      {row.idBHYT}
                     </TableCell>
                     <TableCell align="right">{row.ten}</TableCell>
                     <TableCell align="right">{row.diaChi}</TableCell>

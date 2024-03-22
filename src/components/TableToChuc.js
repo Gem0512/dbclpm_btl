@@ -21,11 +21,11 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import { Button } from '@mui/material';
+import { Button, FormControl, FormLabel, Radio, RadioGroup } from '@mui/material';
 
-function createData(idToChuc, tenToChuc, soLuong, mucDong, daDong, conNo, kiHan, ghiChu) {
+function createData(idToChuc, tenToChuc, soLuong, mucDong, daDong, conNo, tuNgay, denNgay, ghiChu) {
   return {
-    idToChuc, tenToChuc, soLuong, mucDong, daDong, conNo, kiHan, ghiChu
+    idToChuc, tenToChuc, soLuong, mucDong, daDong, conNo, tuNgay, denNgay, ghiChu
   };
 }
 
@@ -106,7 +106,7 @@ const headCells = [
     id: 'daDong',
     numeric: true,
     disablePadding: false,
-    label: 'Dã đóng',
+    label: 'Đã đóng',
   },
   {
     id: 'conNo',
@@ -115,10 +115,16 @@ const headCells = [
     label: 'Còn nợ',
   },
   {
-    id: 'kiHan',
+    id: 'tuNgay',
     numeric: true,
     disablePadding: false,
-    label: 'Kì hạn',
+    label: 'Từ ngày',
+  },
+  {
+    id: 'denNgay',
+    numeric: true,
+    disablePadding: false,
+    label: 'Đến ngày',
   },
   {
     id: 'ghiChu',
@@ -191,7 +197,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, setCaNhanTP } = props;
 
   return (
     <Toolbar
@@ -214,14 +220,53 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
+        <Box style={{
+          display:'flex',
+          width: '100%',
+          justifyContent: 'space-between',
+          padding: 20,
+        }}>
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          // sx={{ flex: '1 1 100%' }}
           variant="h6"
           id="tableTitle"
           component="div"
         >
-          Danh sách BHYT
+          Danh sách BHYT các tổ chức
         </Typography>
+      <Box>
+      <FormControl style={{
+        display:'flex'
+        }}>
+                <FormLabel id="demo-radio-buttons-group-label">Lọc theo</FormLabel>
+                <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    defaultValue="1"
+                    name="radio-buttons-group"
+                    // style={{display:'flex'}}
+                >
+                    <FormControlLabel value="1" control={<Radio />} label="Đã đóng" />
+                    <FormControlLabel value="2" control={<Radio />} label="Chưa đóng" />
+                    <FormControlLabel value="2" control={<Radio />} label="Cả hai" />
+                </RadioGroup>
+                </FormControl>
+      </Box>
+          <Box style={{
+                paddingTop: 40
+            }}>
+                <Button variant="contained" sx={{
+                  marginRight: 10,
+                }}
+                onClick={()=>{
+                  setCaNhanTP(true);
+                 
+                }}>Danh sách cá nhân</Button>
+                <Button variant="contained" onClick={()=>{
+                  setCaNhanTP(false);
+                 
+                }}>Quay lại</Button>
+            </Box>
+        </Box>
       )}
 
       {numSelected > 0 ? (
@@ -245,7 +290,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TableToChuc({setToChucDetail, filteredToChucList}) {
+export default function TableToChuc({response, setCaNhanTP, setToChucDetail}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -315,10 +360,12 @@ export default function TableToChuc({setToChucDetail, filteredToChucList}) {
     [order, orderBy, page, rowsPerPage],
   );
 
+  console.log("YYYYYYY", response)
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} setCaNhanTP={setCaNhanTP}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -334,8 +381,9 @@ export default function TableToChuc({setToChucDetail, filteredToChucList}) {
               rowCount={rows.length}
             />
             <TableBody>
-              {filteredToChucList.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
+            {/* {response.CongTy.} */}
+            {response && response.CongTy && response.CongTy.map((row, index) => {
+              const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -372,7 +420,8 @@ export default function TableToChuc({setToChucDetail, filteredToChucList}) {
                     <TableCell align="right">{row.mucDong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{row.kiHan}</TableCell>
+                    <TableCell align="right">{row.tuNgay}</TableCell>
+                    <TableCell align="right">{row.denNgay}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{
@@ -383,7 +432,118 @@ export default function TableToChuc({setToChucDetail, filteredToChucList}) {
                     </TableCell>
                   </TableRow>
                 );
-              })}
+            }
+       
+      )}
+
+      {response && response.TruongHoc && response.TruongHoc.map((row, index) => {
+              const isItemSelected = isSelected(row.id);
+                const labelId = `enhanced-table-checkbox-${index}`;
+
+                return (
+                  <TableRow
+                    hover
+                    // onClick={(event) => handleClick(event, row.id)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          'aria-labelledby': labelId,
+                        }}
+                      />
+                    </TableCell>
+{/* // idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu */}
+                    <TableCell
+                      component="th"
+                      id={labelId}
+                      scope="row"
+                      padding="none"
+                    >
+                      {row.idBHYT}
+                    </TableCell>
+                    <TableCell align="right">{row.ten}</TableCell>
+                    <TableCell align="right">{row.soLuong}</TableCell>
+                    <TableCell align="right">{row.mucDong}</TableCell>
+                    <TableCell align="right">{row.daDong}</TableCell>
+                    <TableCell align="right">{row.conNo}</TableCell>
+                    <TableCell align="right">{row.tuNgay}</TableCell>
+                    <TableCell align="right">{row.denNgay}</TableCell>
+                    <TableCell align="right">{row.ghiChu}</TableCell>
+                    <TableCell align="right" padding="button">
+                    <Button variant="contained" color="primary" onClick={()=>{
+                        setToChucDetail(row.idBHYT)
+                    }}>
+                        Chi tiết
+                    </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+            }
+       
+      )}
+
+      {response && response.HoGiaDinh && response.HoGiaDinh.map((row, index) => {
+              const isItemSelected = isSelected(row.id);
+                const labelId = `enhanced-table-checkbox-${index}`;
+
+                return (
+                  <TableRow
+                    hover
+                    // onClick={(event) => handleClick(event, row.id)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          'aria-labelledby': labelId,
+                        }}
+                      />
+                    </TableCell>
+{/* // idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu */}
+                    <TableCell
+                      component="th"
+                      id={labelId}
+                      scope="row"
+                      padding="none"
+                    >
+                      {row.idBHYT}
+                    </TableCell>
+                    <TableCell align="right">{row.ten}</TableCell>
+                    <TableCell align="right">{row.soLuong}</TableCell>
+                    <TableCell align="right">{row.mucDong}</TableCell>
+                    <TableCell align="right">{row.daDong}</TableCell>
+                    <TableCell align="right">{row.conNo}</TableCell>
+                    <TableCell align="right">{row.tuNgay}</TableCell>
+                    <TableCell align="right">{row.denNgay}</TableCell>
+                    <TableCell align="right">{row.ghiChu}</TableCell>
+                    <TableCell align="right" padding="button">
+                    <Button variant="contained" color="primary" onClick={()=>{
+                        setToChucDetail(row.idBHYT)
+                    }}>
+                        Chi tiết
+                    </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+            }
+       
+      )}
+              
               {/* id, ten, diaChi, tuoi, mucDong, trangThai, ghiChu, kiHan, thoiGian */}
               {emptyRows > 0 && (
                 <TableRow

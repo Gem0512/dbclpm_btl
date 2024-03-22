@@ -23,7 +23,7 @@ const Header = () => {
 
   return (
     <Box style={{ 
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         height: '80px',
         display: 'flex', alignItems: 'center',
         justifyContent: 'center'
@@ -37,7 +37,7 @@ const Header = () => {
                 <Link to="/listBHYT"
                 style={{
                     textDecoration:'none',
-                    color: 'rgb(25, 118, 210)',
+                    color: 'white',
                     fontWeight:'bold',
                     fontSize: '16px'
                 }}
@@ -52,7 +52,7 @@ const Header = () => {
                 <Link to="/exportReport"
                  style={{
                     textDecoration:'none',
-                    color: 'rgb(25, 118, 210)',
+                    color: 'white',
                     fontWeight:'bold',
                     fontSize: '16px'
                 }}
@@ -66,7 +66,7 @@ const Header = () => {
                 <Link to="/configuration"
                  style={{
                     textDecoration:'none',
-                    color: 'rgb(25, 118, 210)',
+                    color: 'white',
                     fontWeight:'bold',
                     fontSize: '16px'
                 }}
@@ -82,6 +82,9 @@ const Header = () => {
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                         onClick={handleClickAccount}
+                        style={{
+                            color: 'white',
+                        }}
                     >
                         <AdminPanelSettingsIcon></AdminPanelSettingsIcon>
 
@@ -106,7 +109,7 @@ const Header = () => {
                 <Link to="/configuration"
                      style={{
                     textDecoration:'none',
-                    color: 'rgb(25, 118, 210)',
+                    color: 'white',
                     fontWeight:'bold',
                     fontSize: '16px'
                 }}
