@@ -285,21 +285,7 @@ function EnhancedTableToolbar(props) {
                 </RadioGroup>
                 </FormControl>
       </Box>
-          <Box style={{
-                paddingTop: 40
-            }}>
-                <Button variant="contained" sx={{
-                  marginRight: 10,
-                }}
-                onClick={()=>{
-                  setCaNhanTP(true);
-                 
-                }}>Danh sách cá nhân</Button>
-                <Button variant="contained" onClick={()=>{
-                  setCaNhanTP(false);
-                 
-                }}>Quay lại </Button>
-            </Box>
+        
         </Box>
       )}
 

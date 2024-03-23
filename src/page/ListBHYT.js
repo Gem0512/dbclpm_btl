@@ -134,10 +134,17 @@ export default function ListBHYT() {
   const [quanDetail, setQuanDetail]=useState('');
   const [phuongDetail, setPhuongDetail]=useState('');
   const [toChucDetail, setToChucDetail] = useState('');
+  const [ctyDetail, setCtyDetail]= useState('');
+  const [gdDetail, setGdDetail]= useState('');
+  const [truongDetail, setTruongDetail]= useState('');
+
 
   console.log("quanDetail:", quanDetail);
   console.log("phuongDetail:", phuongDetail);
   console.log("toChucDetail", toChucDetail);
+  console.log("ctyDetail", ctyDetail);
+  console.log("gdDetail", gdDetail);
+  console.log("truongDetail", truongDetail);
 
 
   const [response, setResponse] = useState(null);
@@ -145,6 +152,7 @@ export default function ListBHYT() {
 useEffect(()=>{
   
   const fetchDataKQ = async () => {
+    // setResponse(null);
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -262,6 +270,82 @@ useEffect(() => {
 
 console.log("caNhanToChuc", caNhanToChuc)
 
+
+const [caNhanCty, setCaNhanCty] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantrongcongty',
+        ctyDetail, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanCty(response.data);
+      console.log("caNhanCty", response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [ctyDetail]); 
+
+console.log("caNhanCty", caNhanCty)
+
+
+
+const [caNhanGD, setCaNhanGD] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantronghogiadinh',
+        gdDetail, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanGD(response.data);
+      console.log("setCaNhanGD", response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [gdDetail]);
+
+const [caNhanTruong, setCaNhanTruong] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantrongtruonghoc',
+        truongDetail, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanTruong(response.data);
+      console.log("setCaNhanGD", response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [truongDetail]);
 
 
 const [caNhanQuan, setCaNhanQuan] = useState(null);
@@ -396,9 +480,6 @@ useEffect(() => {
                     <MenuItem value="">
                         <em>Hà Nội</em>
                     </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
                     </Select>
                     {/* <FormHelperText>Disabled</FormHelperText> */}
                 </FormControl>
@@ -411,7 +492,7 @@ useEffect(() => {
                     label="Quận"
                     onChange={handleQuanChange}
                     >
-                    <MenuItem value="">
+                    <MenuItem value={null}>
                         <em>None</em>
                     </MenuItem>
                     
@@ -431,7 +512,7 @@ useEffect(() => {
                     label="Phường"
                     onChange={handlePhuongChange}
                     >
-                    <MenuItem value="">
+                    <MenuItem value={null}>
                         <em>None</em>
                     </MenuItem>
                     {filteredPhuongList.map((phuongItem) => (
@@ -523,7 +604,17 @@ useEffect(() => {
         <Box style ={{ display:'flex', justifyContent:'center', width: '100%', marginTop: 60}}>
           <Box style={{width: '80%'}} >
 
-         {caNhanTP===false && (quan==='' && quanDetail==='') &&(phuong===null || (phuong==='' && phuongDetail===''))&& (state.cty === false && state.truong===false && state.gd=== false) && (
+         {caNhanTP===false && (quan==='' && quanDetail==='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
+            <TableQuan style={{width: '100%'}}
+            setQuanDetail={setQuanDetail}
+            response={response||data}
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableQuan>
+         )}
+
+         {caNhanTP===false && (quan===null) &&(phuong!=='' || phuongDetail!=='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
             <TableQuan style={{width: '100%'}}
             setQuanDetail={setQuanDetail}
             response={response||data}
@@ -551,9 +642,12 @@ useEffect(() => {
           <TableToChuc 
           response={response} 
           setCaNhanTP={setCaNhanTP}
-          setToChucDetail={setToChucDetail}>
+          setToChucDetail={setToChucDetail}
           selectedDate1={selectedDate1}
           selectedDate2={selectedDate2}
+          setCtyDetail={setCtyDetail}
+          setGdDetail={setGdDetail}
+          setTruongDetail={setTruongDetail}>
           </TableToChuc>
          )}
 
@@ -579,13 +673,16 @@ useEffect(() => {
          }
 
 
-         {toChucDetail==='' && caNhanTP ===false && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+         {toChucDetail==='' && caNhanTP ===false && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='') && phuong !== null && quan !== null && (state.cty ===false && state.truong===false && state.gd===false) && (
           <TableToChuc 
           response={response} 
           setCaNhanTP={setCaNhanTP}
           setToChucDetail={setToChucDetail}
           selectedDate1={selectedDate1}
-          selectedDate2={selectedDate2}>
+          selectedDate2={selectedDate2}
+          setCtyDetail={setCtyDetail}
+          setGdDetail={setGdDetail}
+          setTruongDetail={setTruongDetail}>
 
           </TableToChuc>
          )}
@@ -601,7 +698,7 @@ useEffect(() => {
           )
          }
 
-         {
+         {/* {
           (toChucDetail!=='') && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanToChuc }
@@ -610,10 +707,20 @@ useEffect(() => {
             selectedDate2={selectedDate2}
             ></TableCaNhan>
           )
-         }
+         } */}
 
         
          {caNhanTP===false &&(quan!=='' || quanDetail!=='') &&(phuong==='' && phuongDetail==='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TablePhuong style={{width: '100%'}}
+            setPhuongDetail={setPhuongDetail}
+            response={response}
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TablePhuong>
+         )}
+
+         {caNhanTP===false &&(quan!=='' || quanDetail!=='') &&(phuong===null)&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TablePhuong style={{width: '100%'}}
             setPhuongDetail={setPhuongDetail}
             response={response}
@@ -635,7 +742,7 @@ useEffect(() => {
           )
          }
 
-         {caNhanTP===false &&(quan==='' && quanDetail==='') && phuong!==null && (phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+         {caNhanTP===false &&(quan==='' && quanDetail==='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TablePhuong style={{width: '100%'}}
             setPhuongDetail={setPhuongDetail}
             response={response}
@@ -648,6 +755,33 @@ useEffect(() => {
           (caNhanTP) &&(quan==='' && quanDetail==='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanQuan}
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}></TableCaNhan>
+          )
+         }
+         {
+          ctyDetail && caNhanCty && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanCty}
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}></TableCaNhan>
+          )
+         }
+         {
+          gdDetail && caNhanGD && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanGD}
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}></TableCaNhan>
+          )
+         }
+         {
+          truongDetail && caNhanTruong && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanTruong}
             setCaNhanTP={setCaNhanTP}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}></TableCaNhan>

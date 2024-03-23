@@ -291,7 +291,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TableToChuc({response, setCaNhanTP, setToChucDetail, selectedDate1, selectedDate2}) {
+export default function TableToChuc({response, setCaNhanTP, setToChucDetail, selectedDate1, selectedDate2, setCtyDetail, setGdDetail, setTruongDetail}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -439,7 +439,8 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail, sel
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{
-                        setToChucDetail(row.idBHYT)
+                        setToChucDetail(row.idBHYT);
+                        setCtyDetail(row.idBHYT);
                     }}>
                         Chi tiết
                     </Button>
@@ -506,7 +507,8 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail, sel
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{
-                        setToChucDetail(row.idBHYT)
+                        setToChucDetail(row.idBHYT);
+                        setTruongDetail(row.idBHYT)
                     }}>
                         Chi tiết
                     </Button>
@@ -573,7 +575,8 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail, sel
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{
-                        setToChucDetail(row.idBHYT)
+                        setToChucDetail(row.idBHYT);
+                        setGdDetail(row.idBHYT)
                     }}>
                         Chi tiết
                     </Button>
