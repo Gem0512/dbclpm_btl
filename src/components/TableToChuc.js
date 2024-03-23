@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { Button, FormControl, FormLabel, Radio, RadioGroup } from '@mui/material';
+import dayjs from 'dayjs';
 
 function createData(idToChuc, tenToChuc, soLuong, mucDong, daDong, conNo, tuNgay, denNgay, ghiChu) {
   return {
@@ -290,7 +291,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TableToChuc({response, setCaNhanTP, setToChucDetail}) {
+export default function TableToChuc({response, setCaNhanTP, setToChucDetail, selectedDate1, selectedDate2}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -382,7 +383,20 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail}) {
             />
             <TableBody>
             {/* {response.CongTy.} */}
-            {response && response.CongTy && response.CongTy.map((row, index) => {
+            {response && response.CongTy && response.CongTy
+              .filter(row => {
+                  // Kiểm tra xem selectedDate1 và selectedDate2 có được chọn hay không
+                  const isSelectedDateRange = selectedDate1 && selectedDate2;
+
+                  // Kiểm tra xem ngày của mục nằm trong khoảng [selectedDate1, selectedDate2] hay không
+                  const isDateInRange = isSelectedDateRange && 
+                      new Date(row.tuNgay) >= new Date(selectedDate1) && 
+                      new Date(row.denNgay) <= new Date(selectedDate2);
+
+                  // Trả về true nếu không có khoảng ngày được chọn hoặc mục nằm trong khoảng ngày được chọn
+                  return !isSelectedDateRange || isDateInRange;
+              })
+              .map((row, index) => {
               const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -420,8 +434,8 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail}) {
                     <TableCell align="right">{row.mucDong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{row.tuNgay}</TableCell>
-                    <TableCell align="right">{row.denNgay}</TableCell>
+                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{
@@ -436,7 +450,20 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail}) {
        
       )}
 
-      {response && response.TruongHoc && response.TruongHoc.map((row, index) => {
+      {response && response.TruongHoc && response.TruongHoc
+              .filter(row => {
+                  // Kiểm tra xem selectedDate1 và selectedDate2 có được chọn hay không
+                  const isSelectedDateRange = selectedDate1 && selectedDate2;
+
+                  // Kiểm tra xem ngày của mục nằm trong khoảng [selectedDate1, selectedDate2] hay không
+                  const isDateInRange = isSelectedDateRange && 
+                      new Date(row.tuNgay) >= new Date(selectedDate1) && 
+                      new Date(row.denNgay) <= new Date(selectedDate2);
+
+                  // Trả về true nếu không có khoảng ngày được chọn hoặc mục nằm trong khoảng ngày được chọn
+                  return !isSelectedDateRange || isDateInRange;
+              })
+              .map((row, index) => {
               const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -474,8 +501,8 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail}) {
                     <TableCell align="right">{row.mucDong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{row.tuNgay}</TableCell>
-                    <TableCell align="right">{row.denNgay}</TableCell>
+                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{
@@ -490,7 +517,20 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail}) {
        
       )}
 
-      {response && response.HoGiaDinh && response.HoGiaDinh.map((row, index) => {
+      {response && response.HoGiaDinh && response.HoGiaDinh
+              .filter(row => {
+                  // Kiểm tra xem selectedDate1 và selectedDate2 có được chọn hay không
+                  const isSelectedDateRange = selectedDate1 && selectedDate2;
+
+                  // Kiểm tra xem ngày của mục nằm trong khoảng [selectedDate1, selectedDate2] hay không
+                  const isDateInRange = isSelectedDateRange && 
+                      new Date(row.tuNgay) >= new Date(selectedDate1) && 
+                      new Date(row.denNgay) <= new Date(selectedDate2);
+
+                  // Trả về true nếu không có khoảng ngày được chọn hoặc mục nằm trong khoảng ngày được chọn
+                  return !isSelectedDateRange || isDateInRange;
+              })
+              .map((row, index) => {
               const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -528,8 +568,8 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail}) {
                     <TableCell align="right">{row.mucDong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{row.tuNgay}</TableCell>
-                    <TableCell align="right">{row.denNgay}</TableCell>
+                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{

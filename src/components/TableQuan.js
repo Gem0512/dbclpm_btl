@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { Button, FormControl, FormLabel, Radio, RadioGroup } from '@mui/material';
+import dayjs from 'dayjs';
 
 function createData(idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu) {
   return {
@@ -296,7 +297,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TableQuan({setQuanDetail, response, setCaNhanTP}) {
+export default function TableQuan({setQuanDetail, response, setCaNhanTP, selectedDate1, selectedDate2}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -394,7 +395,20 @@ export default function TableQuan({setQuanDetail, response, setCaNhanTP}) {
               rowCount={rows.length}
             />
             <TableBody>
-              {response.map((row, index) => {
+            {response
+              .filter(row => {
+                  // Kiểm tra xem selectedDate1 và selectedDate2 có được chọn hay không
+                  const isSelectedDateRange = selectedDate1 && selectedDate2;
+
+                  // Kiểm tra xem ngày của mục nằm trong khoảng [selectedDate1, selectedDate2] hay không
+                  const isDateInRange = isSelectedDateRange && 
+                      new Date(row.tuNgay) >= new Date(selectedDate1) && 
+                      new Date(row.denNgay) <= new Date(selectedDate2);
+
+                  // Trả về true nếu không có khoảng ngày được chọn hoặc mục nằm trong khoảng ngày được chọn
+                  return !isSelectedDateRange || isDateInRange;
+              })
+              .map((row, index) => {
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -432,8 +446,8 @@ export default function TableQuan({setQuanDetail, response, setCaNhanTP}) {
                     <TableCell align="right">{row.mucDong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{row.tuNgay}</TableCell>
-                    <TableCell align="right">{row.denNgay}</TableCell>
+                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.dongTheo}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">

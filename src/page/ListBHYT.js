@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
-import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select } from '@mui/material'
+import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import TableQuan from '../components/TableQuan';
 import TablePhuong from '../components/TablePhuong';
@@ -9,11 +9,13 @@ import TableCaNhan from '../components/TableCaNhan';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 export default function ListBHYT() {
 
   const [quan, setQuan] = React.useState('');
   const [phuong, setPhuong] = React.useState('');
+
   const handleQuanChange = (event) => {
     setQuan(event.target.value);
     if(event.target.value===''){
@@ -29,6 +31,49 @@ export default function ListBHYT() {
     console.log("Phường:", phuong);
 
   };
+
+
+  const [selectedDate1, setSelectedDate1] = useState(null);
+
+  // Hàm xử lý sự kiện khi người dùng chọn một ngày mới
+  const handleDateChange1 = (newDate) => {
+    const dateString = newDate ? dayjs(newDate).format('YYYY-MM-DD') : '';
+    setSelectedDate1(dateString);
+    console.log(dateString)
+  };
+
+  const [selectedDate2, setSelectedDate2] = useState(null);
+
+  // Hàm xử lý sự kiện khi người dùng chọn một ngày mới
+  const handleDateChange2 = (newDate) => {
+    const dateString = newDate ? dayjs(newDate).format('YYYY-MM-DD') : '';
+    setSelectedDate2(dateString);
+    console.log(dateString)
+  };
+  
+
+  // const [filteredDate, setFilteredDate] = useState([]);
+
+  // useEffect(()=>{
+  //   const fetchData = async () => {
+  //     const filteredData = response!==''?response:data.filter(item => {
+  //         const fromDate = new Date(item.tuNgay).toISOString().split('T')[0]; 
+  //         const toDate = new Date(item.denNgay).toISOString().split('T')[0];
+
+
+  //         return fromDate <= selectedDate1 && toDate >= selectedDate2;
+  //     });
+
+  //     console.log("fromDate <= selectedDate1", new Date(selectedDate2).toISOString().split('T')[0])
+  //     console.log("fromDate <= selectedDate1",selectedDate2)
+  //     setFilteredDate(filteredData);
+  //     setResponse(filteredData);
+  //     console.log("filteredData", filteredDate)
+  // };
+
+  // fetchData();
+  // }, [selectedDate1, selectedDate2])
+
   const [caNhanTP, setCaNhanTP] =useState(false);
 
 
@@ -128,27 +173,6 @@ useEffect(()=>{
   fetchDataKQ();
 },[quan,quanDetail, phuong, phuongDetail ,state.cty, state.truong, state.gd])
 
-  // const [response, setResponse] = useState(null);
-  // const [errorKQ, setErrorKQ] = useState(null);
-
-  // const fetchDataKQ = async () => {
-  //   try {
-  //     const response = await axios.get('http://26.164.228.111:8080/query', {
-  //       params: {
-  //         quan: quan||quanDetail||null,
-  //         phuong: phuong||phuongDetail|| null,
-  //         congTy: state.cty,
-  //         truongHoc: state.truong,
-  //         hoGiaDinh: state.gd
-  //       }
-  //     });
-  //     setResponse(response.data);
-  //     setErrorKQ(null);
-  //   } catch (error) {
-  //     setErrorKQ('Error fetching data');
-  //     setResponse(null);
-  //   }
-  // };
 
  console.log('response', response);
  console.log('quan', quan);
@@ -160,75 +184,6 @@ useEffect(()=>{
  console.log('state.gd', state.gd);
 
  
-  // const [hoGiaDinhList, setHoGiaDinhList] = useState([]);
-  // const [isLoadingGD, setIsLoadingGD] = useState(true);
-  // const [errorGD, setErrorGD] = useState(null);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch('http://26.164.228.111:8080/getallhogiadinh');
-  //       if (!response.ok) {
-  //         throw new Error('Failed to fetch data');
-  //       }
-  //       const jsonData = await response.json();
-  //       setHoGiaDinhList(jsonData);
-  //     } catch (error) {
-  //       setErrorGD(error);
-  //     } finally {
-  //       setIsLoadingGD(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-  // const [congTyList, setCongTyList] = useState([]);
-  // const [isLoadingCT, setIsLoadingCT] = useState(true);
-  // const [errorCT, setErrorCT] = useState(null);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch('http://26.164.228.111:8080/getallcongty');
-  //       if (!response.ok) {
-  //         throw new Error('Failed to fetch data');
-  //       }
-  //       const jsonData = await response.json();
-  //       setCongTyList(jsonData);
-  //     } catch (error) {
-  //       setErrorCT(error);
-  //     } finally {
-  //       setIsLoadingCT(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-
-//   const [truongList, setTruongList] = useState([]);
-// const [isLoadingTruong, setIsLoadingTruong] = useState(true);
-// const [errorTruong, setErrorTruong] = useState(null);
-
-// useEffect(() => {
-//   const fetchData = async () => {
-//     try {
-//       const response = await fetch('http://26.164.228.111:8080/getalltruonghoc');
-//       if (!response.ok) {
-//         throw new Error('Failed to fetch data');
-//       }
-//       const jsonData = await response.json();
-//       setTruongList(jsonData);
-//     } catch (error) {
-//       setErrorTruong(error);
-//     } finally {
-//       setIsLoadingTruong(false);
-//     }
-//   };
-
-//   fetchData();
-// }, []);
 
 const [allCaNhan, setAllCaNhan] = useState([]);
 const [isLoadingCaNhan, setIsLoadingCaNhan] = useState(true);
@@ -335,45 +290,6 @@ useEffect(() => {
 
 console.log("caNhanQuan", caNhanQuan)
 
-// console.log('allCaNhan', allCaNhan);
-// var list =[...congTyList, ...hoGiaDinhList, ...truongList];
-// console.log('List',list);
-//   const [toChucList, setToChucList] = useState(list);
-// console.log('toChucList', toChucList)
-// // ||(state.cty===false && state.gd===false && state.truong===false
-// useEffect(()=>{
-//   if ((state.cty && state.gd && state.truong)||(state.cty===false && state.gd===false && state.truong===false)) {
-//     setToChucList([...congTyList, ...hoGiaDinhList, ...truongList]);
-//   } else if (state.cty &&  state.gd) {
-//     setToChucList([...congTyList, ...hoGiaDinhList]);
-//   } else if (state.cty &&  state.truong) {
-//     setToChucList([...congTyList, ...truongList]);
-//   }
-//     else if (state.gd &&  state.truong) {
-//       setToChucList([...truongList, ...hoGiaDinhList]);
-//     }
-//     else if(state.cty){
-//       setToChucList(congTyList);
-//     }
-//     else if(state.gd){
-//       setToChucList(hoGiaDinhList);
-//     }
-//     else if(state.truong){
-//       setToChucList(truongList);
-//     }
-//   // if(state.cty){
-//   //   setToChucList([...congTyList]);
-//   // }
-//   // if(state.gd){
-//   //   setToChucList([...hoGiaDinhList]);
-//   // }
-//   // if(state.truong){
-//   //   setToChucList([...truongList]);
-//   // }
-// },[state.cty, state.gd, state.truong])
-
-
-// console.log('congTyList', congTyList)
 
 const [phuongList, setPhuongList] = useState([]);
 const [isLoadingPhuong, setIsLoadingPhuong] = useState(true);
@@ -442,18 +358,7 @@ useEffect(() => {
     }
   });
 
-  // const filteredToChucList = toChucList.filter(item => {
-  //   if (phuong !== '') {
-  //     return item.idBHYTPhuong === phuong;
-  //   } else if (phuongDetail !== '') {
-  //     return item.idBHYTPhuong === phuongDetail;
-  //   }
-  // });
-  // console.log('toChucList', toChucList);
-  // console.log('filteredToChucList', filteredToChucList)
 
-
-  
   
   return (
     <Box style={{
@@ -575,7 +480,11 @@ useEffect(() => {
                   paddingRight: 116
                 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker label="Chọn ngày bắt đầu" />
+                    <DatePicker 
+                    label="Chọn ngày bắt đầu"
+                    value={selectedDate1}
+                    onChange={handleDateChange1}
+                    renderInput={(params) => <TextField {...params} />} />
                 </LocalizationProvider>
                 </Box>
 
@@ -584,7 +493,11 @@ useEffect(() => {
                   // paddingRight: 110
                 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker label="Chọn ngày kết thúc" />
+                    <DatePicker 
+                    label="Chọn ngày kết thúc"
+                    value={selectedDate2}
+                    onChange={handleDateChange2}
+                    renderInput={(params) => <TextField {...params} />} />
                 </LocalizationProvider>
                 </Box>
                     
@@ -615,6 +528,8 @@ useEffect(() => {
             setQuanDetail={setQuanDetail}
             response={response||data}
             setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
             ></TableQuan>
          )}
 
@@ -622,7 +537,10 @@ useEffect(() => {
           caNhanTP && (quan==='' && quanDetail==='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={allCaNhan}
-            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableCaNhan>
           )
          }
 
@@ -634,7 +552,8 @@ useEffect(() => {
           response={response} 
           setCaNhanTP={setCaNhanTP}
           setToChucDetail={setToChucDetail}>
-
+          selectedDate1={selectedDate1}
+          selectedDate2={selectedDate2}
           </TableToChuc>
          )}
 
@@ -642,7 +561,10 @@ useEffect(() => {
           (caNhanTP)  && (state.cty !== false || state.truong!==false || state.gd!== false) && (
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanPhuong}
-            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableCaNhan>
           )
          }
 
@@ -650,7 +572,9 @@ useEffect(() => {
           (toChucDetail!=='')  && (state.cty !== false || state.truong!==false || state.gd!== false) && (
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanToChuc}
-            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}></TableCaNhan>
           )
          }
 
@@ -659,7 +583,9 @@ useEffect(() => {
           <TableToChuc 
           response={response} 
           setCaNhanTP={setCaNhanTP}
-          setToChucDetail={setToChucDetail}>
+          setToChucDetail={setToChucDetail}
+          selectedDate1={selectedDate1}
+          selectedDate2={selectedDate2}>
 
           </TableToChuc>
          )}
@@ -668,7 +594,10 @@ useEffect(() => {
           (caNhanTP) && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanPhuong }
-            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableCaNhan>
           )
          }
 
@@ -676,7 +605,10 @@ useEffect(() => {
           (toChucDetail!=='') && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanToChuc }
-            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableCaNhan>
           )
          }
 
@@ -686,6 +618,8 @@ useEffect(() => {
             setPhuongDetail={setPhuongDetail}
             response={response}
             setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
             ></TablePhuong>
          )}
 
@@ -694,7 +628,10 @@ useEffect(() => {
           (caNhanTP)  &&(quan!=='' || quanDetail!=='') &&(phuong==='' && phuongDetail==='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanQuan}
-            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableCaNhan>
           )
          }
 
@@ -702,6 +639,8 @@ useEffect(() => {
             <TablePhuong style={{width: '100%'}}
             setPhuongDetail={setPhuongDetail}
             response={response}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
             ></TablePhuong>
          )}
 
@@ -709,11 +648,11 @@ useEffect(() => {
           (caNhanTP) &&(quan==='' && quanDetail==='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanQuan}
-            setCaNhanTP={setCaNhanTP}></TableCaNhan>
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}></TableCaNhan>
           )
          }
-
-
           </Box>
         </Box>
     </Box>

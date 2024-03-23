@@ -22,10 +22,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { Button, FormControl, FormLabel, Radio, RadioGroup } from '@mui/material';
+import dayjs from 'dayjs';
 
-function createData(id, ten, diaChi, tuoi, mucDong, trangThai, ghiChu, kiHan, thoiGian) {
+function createData(id, ten, diaChi, ngaySinh, gioiTinh, luong, mucDong, daDong, conNo, dienMienGiam, ghiChu, tuNgay, denNgay, dongTheo, noiDki) {
   return {
-    id, ten, diaChi, tuoi, mucDong, trangThai, ghiChu, kiHan, thoiGian
+    id, ten, diaChi, ngaySinh, gioiTinh, luong, mucDong, daDong, conNo, dienMienGiam, ghiChu, tuNgay, denNgay, dongTheo, noiDki
   };
 }
 
@@ -76,7 +77,7 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-
+// id, ten, diaChi, ngaySinh, gioiTinh, luong, mucDong, daDong, conNo, dienMienGiam, ghiChu, tuNgay, denNgay, dongTheo, noiDki
 const headCells = [
   {
     id: 'id',
@@ -97,10 +98,22 @@ const headCells = [
     label: 'Địa chỉ',
   },
   {
-    id: 'tuoi',
+    id: 'ngaySinh',
     numeric: true,
     disablePadding: false,
-    label: 'Tuổi',
+    label: 'Ngày sinh',
+  },
+  {
+    id: 'gioiTinh',
+    numeric: true,
+    disablePadding: false,
+    label: 'Giới tính',
+  },
+  {
+    id: 'luong',
+    numeric: true,
+    disablePadding: false,
+    label: 'Lương',
   },
   {
     id: 'mucDong',
@@ -109,10 +122,24 @@ const headCells = [
     label: 'Mức đóng',
   },
   {
-    id: 'trangThai',
+    id: 'daDong',
     numeric: true,
     disablePadding: false,
-    label: 'Trạng thái',
+    label: 'Đã đóng',
+  },
+
+  // conNo, dienMienGiam, ghiChu, tuNgay, denNgay, dongTheo, noiDki
+  {
+    id: 'conNo',
+    numeric: true,
+    disablePadding: false,
+    label: 'Còn nợ',
+  },
+  {
+    id: 'dienMienGiam',
+    numeric: true,
+    disablePadding: false,
+    label: 'Diện miễn giảm',
   },
   {
     id: 'ghiChu',
@@ -121,16 +148,29 @@ const headCells = [
     label: 'Ghi chú',
   },
   {
-    id: 'kiHan',
+    id: 'tuNgay',
     numeric: true,
     disablePadding: false,
-    label: 'Kì hạn',
+    label: 'Từ ngày',
+  },
+
+  {
+    id: 'denNgay',
+    numeric: true,
+    disablePadding: false,
+    label: 'Đến ngày',
   },
   {
-    id: 'thoiGian',
+    id: 'dongTheo',
     numeric: true,
     disablePadding: false,
-    label: 'Thời gian',
+    label: 'Đóng theo',
+  },
+  {
+    id: 'noiDki',
+    numeric: true,
+    disablePadding: false,
+    label: 'Nơi đăng kí',
   },
 ];
 
@@ -284,7 +324,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TableCaNhan({allCaNhan, setCaNhanTP}) {
+export default function TableCaNhan({allCaNhan, setCaNhanTP, selectedDate1, selectedDate2}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -373,7 +413,20 @@ export default function TableCaNhan({allCaNhan, setCaNhanTP}) {
               rowCount={rows.length}
             />
             <TableBody>
-              {allCaNhan.map((row, index) => {
+              {allCaNhan
+              .filter(row => {
+                  // Kiểm tra xem selectedDate1 và selectedDate2 có được chọn hay không
+                  const isSelectedDateRange = selectedDate1 && selectedDate2;
+
+                  // Kiểm tra xem ngày của mục nằm trong khoảng [selectedDate1, selectedDate2] hay không
+                  const isDateInRange = isSelectedDateRange && 
+                      new Date(row.tuNgay) >= new Date(selectedDate1) && 
+                      new Date(row.denNgay) <= new Date(selectedDate2);
+
+                  // Trả về true nếu không có khoảng ngày được chọn hoặc mục nằm trong khoảng ngày được chọn
+                  return !isSelectedDateRange || isDateInRange;
+              })
+              .map((row, index) => {
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -405,14 +458,22 @@ export default function TableCaNhan({allCaNhan, setCaNhanTP}) {
                     >
                       {row.idBHYT}
                     </TableCell>
+                    {/* // id, ten, diaChi, ngaySinh, gioiTinh, luong, mucDong, daDong, conNo, dienMienGiam, ghiChu, tuNgay, denNgay, dongTheo, noiDki */}
+
                     <TableCell align="right">{row.ten}</TableCell>
                     <TableCell align="right">{row.diaChi}</TableCell>
-                    <TableCell align="right">{row.tuoi}</TableCell>
+                    <TableCell align="right">{row.ngaySinh}</TableCell>
+                    <TableCell align="right">{row.gioiTinh}</TableCell>
+                    <TableCell align="right">{row.luong}</TableCell>
                     <TableCell align="right">{row.mucDong}</TableCell>
-                    <TableCell align="right">{row.trangThai}</TableCell>
+                    <TableCell align="right">{row.daDong}</TableCell>
+                    <TableCell align="right">{row.conNo}</TableCell>
+                    <TableCell align="right">{row.dienMienGiam}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
-                    <TableCell align="right">{row.kiHan}</TableCell>
-                    <TableCell align="right">{row.thoiGian}</TableCell>
+                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="right">{row.dongTheo}</TableCell>
+                    <TableCell align="right">{row.noiDki}</TableCell>
 
                   </TableRow>
                 );
