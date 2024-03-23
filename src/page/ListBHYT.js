@@ -523,7 +523,7 @@ useEffect(() => {
         <Box style ={{ display:'flex', justifyContent:'center', width: '100%', marginTop: 60}}>
           <Box style={{width: '80%'}} >
 
-         {caNhanTP===false && (quan==='' && quanDetail==='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
+         {caNhanTP===false && (quan==='' && quanDetail==='') &&(phuong===null || (phuong==='' && phuongDetail===''))&& (state.cty === false && state.truong===false && state.gd=== false) && (
             <TableQuan style={{width: '100%'}}
             setQuanDetail={setQuanDetail}
             response={response||data}
@@ -635,7 +635,7 @@ useEffect(() => {
           )
          }
 
-         {caNhanTP===false &&(quan==='' && quanDetail==='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+         {caNhanTP===false &&(quan==='' && quanDetail==='') && phuong!==null && (phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TablePhuong style={{width: '100%'}}
             setPhuongDetail={setPhuongDetail}
             response={response}
