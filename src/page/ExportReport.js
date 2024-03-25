@@ -71,7 +71,7 @@ export default function ExportReport() {
   };
   return (
     <Box style={{
-        backgroundColor: '#ccc',
+        backgroundColor: 'white',
         width: '100%',
         height: '1000px'
     }}>

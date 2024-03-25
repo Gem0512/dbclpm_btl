@@ -578,6 +578,7 @@ useEffect(() => {
                     <DatePicker 
                     label="Chọn ngày kết thúc"
                     value={selectedDate2}
+                    // minDate={selectedDate1}
                     onChange={handleDateChange2}
                     renderInput={(params) => <TextField {...params} />} />
                 </LocalizationProvider>

@@ -375,12 +375,9 @@ export default function TableQuan({setQuanDetail, response, setCaNhanTP, stateLT
   return (
     <Box sx={{ 
       width: '100%', 
-    shadowColor: 'black',
-    shadowOffset: { width: 10, height: 5 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    borderWidth: 2,
+      padding: 10,
+    borderRadius: 5,
+    // backgroundColor:'#B2B2B2'
     // border
       }}>
       <Paper sx={{ width: '100%', mb: 2 }} >
