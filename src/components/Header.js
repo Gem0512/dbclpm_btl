@@ -23,8 +23,7 @@ const Header = () => {
 
   return (
     <Box style={{ 
-        // backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        backgroundColor: "#008DDA",
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         height: '80px',
         display: 'flex', alignItems: 'center',
         justifyContent: 'center'
