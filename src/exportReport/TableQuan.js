@@ -347,9 +347,9 @@ export default function TableQuan({setQuanDetail, response, setCaNhanTP, stateLT
       ),
     [order, orderBy, page, rowsPerPage],
   );
-  const totalSL = response.reduce((acc, curr) => acc + curr.soLuong, 0);
-  const totalDaDong = response.reduce((acc, curr) => acc + curr.daDong, 0);
-  const totalConNo = response.reduce((acc, curr) => acc + curr.conNo, 0);
+  const totalSL = response?.reduce((acc, curr) => acc + curr.soLuong, 0);
+  const totalDaDong = response?.reduce((acc, curr) => acc + curr.daDong, 0);
+  const totalConNo = response?.reduce((acc, curr) => acc + curr.conNo, 0);
   return (
     <Box sx={{ 
       width: '100%', 

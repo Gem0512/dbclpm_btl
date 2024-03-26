@@ -350,7 +350,9 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
   );
 
   console.log("YYYYYYY", response)
-
+  const totalSL = response.CongTy?.reduce((acc, curr) => acc + curr.soLuong, 0) +  response.TruongHoc?.reduce((acc, curr) => acc + curr.soLuong, 0) + response.HoGiaDinh?.reduce((acc, curr) => acc + curr.soLuong, 0);
+  const totalDaDong = response.CongTy?.reduce((acc, curr) => acc + curr.daDong, 0) + response.TruongHoc?.reduce((acc, curr) => acc + curr.daDong, 0) + response.HoGiaDinh?.reduce((acc, curr) => acc + curr.daDong, 0);
+  const totalConNo = response.CongTy?.reduce((acc, curr) => acc + curr.conNo, 0)+ response.TruongHoc?.reduce((acc, curr) => acc + curr.conNo, 0) + response.HoGiaDinh?.reduce((acc, curr) => acc + curr.conNo, 0);
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -590,6 +592,32 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
             }
        
       )}
+      <TableRow sx={{ cursor: 'pointer' }}>
+                <TableCell align="right">
+                    
+                </TableCell>
+                <TableCell align="right">
+                    
+                </TableCell>
+                <TableCell align="right">
+                    Tổng
+                </TableCell>
+                <TableCell align="right">
+                    {totalSL}
+                </TableCell>
+                <TableCell align="right">
+                    {totalDaDong}
+                </TableCell>
+                <TableCell align="right">
+                    {totalConNo}
+                </TableCell>
+                <TableCell align="right">
+                    
+                </TableCell>
+                <TableCell align="right">
+                    
+                </TableCell>
+              </TableRow>
               
               {/* id, ten, diaChi, tuoi, mucDong, trangThai, ghiChu, kiHan, thoiGian */}
               {emptyRows > 0 && (
