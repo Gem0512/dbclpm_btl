@@ -15,10 +15,11 @@ export default function ListBHYT() {
 
   const [quan, setQuan] = React.useState('');
   const [phuong, setPhuong] = React.useState('');
+  const [stateLT, setStateLT] = React.useState("3");
 
   const handleQuanChange = (event) => {
     setQuan(event.target.value);
-    if(event.target.value===''){
+    if(event.target.value===""){
       setPhuong(null);
     }
     console.log("Quận:", quan);
@@ -148,6 +149,7 @@ export default function ListBHYT() {
 
 
   const [response, setResponse] = useState(null);
+  const [checkChange, setCheckChange]= useState(false);
   const [errorKQ, setErrorKQ] = useState(null);
 useEffect(()=>{
   
@@ -172,6 +174,10 @@ useEffect(()=>{
       }
       const data = await res.json();
       setResponse(data);
+      if(quan==="" && phuong===null){
+        setCheckChange(true);
+      }
+      else setCheckChange(false);
       setErrorKQ(null);
     } catch (error) {
       setErrorKQ('Error fetching data');
@@ -492,7 +498,7 @@ useEffect(() => {
                     label="Quận"
                     onChange={handleQuanChange}
                     >
-                    <MenuItem value={null}>
+                    <MenuItem value="">
                         <em>None</em>
                     </MenuItem>
                     
@@ -512,7 +518,7 @@ useEffect(() => {
                     label="Phường"
                     onChange={handlePhuongChange}
                     >
-                    <MenuItem value={null}>
+                    <MenuItem value="">
                         <em>None</em>
                     </MenuItem>
                     {filteredPhuongList.map((phuongItem) => (
@@ -577,6 +583,7 @@ useEffect(() => {
                     <DatePicker 
                     label="Chọn ngày kết thúc"
                     value={selectedDate2}
+                    // minDate={selectedDate1.dayjs}
                     onChange={handleDateChange2}
                     renderInput={(params) => <TextField {...params} />} />
                 </LocalizationProvider>
@@ -594,12 +601,7 @@ useEffect(() => {
             
             </Box>
             </Box>
-            <Box style={{
-                marginTop: '100px',
-                marginLeft: '50px'
-            }}>
-                 <Button variant="contained" >Lọc</Button>
-            </Box>
+           
         </Box>
         <Box style ={{ display:'flex', justifyContent:'center', width: '100%', marginTop: 60}}>
           <Box style={{width: '80%'}} >
@@ -609,26 +611,32 @@ useEffect(() => {
             setQuanDetail={setQuanDetail}
             response={response||data}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}
             ></TableQuan>
          )}
 
-         {caNhanTP===false && (quan===null) &&(phuong!=='' || phuongDetail!=='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
+         {/* {caNhanTP===false && (quan==="") &&(phuong!=='' || phuongDetail!=='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
             <TableQuan style={{width: '100%'}}
             setQuanDetail={setQuanDetail}
             response={response||data}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}
             ></TableQuan>
-         )}
+         )} */}
 
          {
           caNhanTP && (quan==='' && quanDetail==='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={allCaNhan}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}
             ></TableCaNhan>
@@ -643,6 +651,8 @@ useEffect(() => {
           response={response} 
           setCaNhanTP={setCaNhanTP}
           setToChucDetail={setToChucDetail}
+          stateLT = {stateLT}
+          setStateLT = {setStateLT}
           selectedDate1={selectedDate1}
           selectedDate2={selectedDate2}
           setCtyDetail={setCtyDetail}
@@ -656,6 +666,8 @@ useEffect(() => {
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanPhuong}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}
             ></TableCaNhan>
@@ -667,6 +679,8 @@ useEffect(() => {
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanToChuc}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}></TableCaNhan>
           )
@@ -678,6 +692,8 @@ useEffect(() => {
           response={response} 
           setCaNhanTP={setCaNhanTP}
           setToChucDetail={setToChucDetail}
+          stateLT = {stateLT}
+          setStateLT = {setStateLT}
           selectedDate1={selectedDate1}
           selectedDate2={selectedDate2}
           setCtyDetail={setCtyDetail}
@@ -692,6 +708,8 @@ useEffect(() => {
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanPhuong }
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}
             ></TableCaNhan>
@@ -715,16 +733,20 @@ useEffect(() => {
             setPhuongDetail={setPhuongDetail}
             response={response}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}
             ></TablePhuong>
          )}
 
-         {response && caNhanTP===false &&(quan!=='' || quanDetail!=='') &&(phuong===null)&& (state.cty ===false && state.truong===false && state.gd===false) && (
+         {caNhanTP===false &&(quan!=='' || quanDetail!=='') &&(phuong===null)&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TablePhuong style={{width: '100%'}}
             setPhuongDetail={setPhuongDetail}
             response={response}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}
             ></TablePhuong>
@@ -736,6 +758,8 @@ useEffect(() => {
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanQuan}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}
             ></TableCaNhan>
@@ -746,6 +770,9 @@ useEffect(() => {
             <TablePhuong style={{width: '100%'}}
             setPhuongDetail={setPhuongDetail}
             response={response}
+            setCaNhanTP={false}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}
             ></TablePhuong>
@@ -756,6 +783,8 @@ useEffect(() => {
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanQuan}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}></TableCaNhan>
           )
@@ -765,6 +794,8 @@ useEffect(() => {
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanCty}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}></TableCaNhan>
           )
@@ -774,6 +805,8 @@ useEffect(() => {
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanGD}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}></TableCaNhan>
           )
@@ -783,6 +816,8 @@ useEffect(() => {
             <TableCaNhan style={{width: '100%'}}
             allCaNhan={caNhanTruong}
             setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}></TableCaNhan>
           )

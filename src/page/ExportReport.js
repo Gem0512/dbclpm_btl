@@ -1,27 +1,85 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
-import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, Typography } from '@mui/material'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from '@mui/material'
+import TableQuan from '../exportReport/TableQuan';
+import TablePhuong from '../exportReport/TablePhuong';
+import TableToChuc from '../exportReport/TableToChuc';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import axios from 'axios';
+import dayjs from 'dayjs';
 
-export default function ExportReport() {
+export default function ListBHYT() {
 
   const [quan, setQuan] = React.useState('');
+  const [phuong, setPhuong] = React.useState('');
+  const [stateLT, setStateLT] = React.useState("3");
 
   const handleQuanChange = (event) => {
     setQuan(event.target.value);
+    if(event.target.value===""){
+      setPhuong(null);
+    }
+    console.log("Quận:", quan);
   };
 
-  const [phuong, setPhuong] = React.useState('');
+
 
   const handlePhuongChange = (event) => {
     setPhuong(event.target.value);
+    console.log("Phường:", phuong);
+
   };
 
 
+  const [selectedDate1, setSelectedDate1] = useState(null);
+
+  // Hàm xử lý sự kiện khi người dùng chọn một ngày mới
+  const handleDateChange1 = (newDate) => {
+    const dateString = newDate ? dayjs(newDate).format('YYYY-MM-DD') : '';
+    setSelectedDate1(dateString);
+    console.log(dateString)
+  };
+
+  const [selectedDate2, setSelectedDate2] = useState(null);
+
+  // Hàm xử lý sự kiện khi người dùng chọn một ngày mới
+  const handleDateChange2 = (newDate) => {
+    const dateString = newDate ? dayjs(newDate).format('YYYY-MM-DD') : '';
+    setSelectedDate2(dateString);
+    console.log(dateString)
+  };
+  
+
+  // const [filteredDate, setFilteredDate] = useState([]);
+
+  // useEffect(()=>{
+  //   const fetchData = async () => {
+  //     const filteredData = response!==''?response:data.filter(item => {
+  //         const fromDate = new Date(item.tuNgay).toISOString().split('T')[0]; 
+  //         const toDate = new Date(item.denNgay).toISOString().split('T')[0];
+
+
+  //         return fromDate <= selectedDate1 && toDate >= selectedDate2;
+  //     });
+
+  //     console.log("fromDate <= selectedDate1", new Date(selectedDate2).toISOString().split('T')[0])
+  //     console.log("fromDate <= selectedDate1",selectedDate2)
+  //     setFilteredDate(filteredData);
+  //     setResponse(filteredData);
+  //     console.log("filteredData", filteredDate)
+  // };
+
+  // fetchData();
+  // }, [selectedDate1, selectedDate2])
+
+  const [caNhanTP, setCaNhanTP] =useState(false);
+
+
   const [state, setState] = React.useState({
-    gilad: true,
-    jason: false,
-    antoine: false,
+    cty: false,
+    gd: false,
+    truong: false,
   });
 
   const handleChange = (event) => {
@@ -31,8 +89,10 @@ export default function ExportReport() {
     });
   };
 
-  const { gilad, jason, antoine } = state;
-  const error = [gilad, jason, antoine].filter((v) => v).length !== 2;
+  console.log('check', state.cty, state.gd, state.truong)
+
+  const { cty, gd, truong } = state;
+//   const error = [gilad, jason, antoine].filter((v) => v).length !== 2;
 
 
   const [time1, setTime1] = React.useState('');
@@ -69,11 +129,331 @@ export default function ExportReport() {
   const handleRadioChange = (event) => {
     setSelectedValue(event.target.value);
   };
+
+  const [quanDetail, setQuanDetail]=useState('');
+  const [phuongDetail, setPhuongDetail]=useState('');
+  const [toChucDetail, setToChucDetail] = useState('');
+  const [ctyDetail, setCtyDetail]= useState('');
+  const [gdDetail, setGdDetail]= useState('');
+  const [truongDetail, setTruongDetail]= useState('');
+
+
+  console.log("quanDetail:", quanDetail);
+  console.log("phuongDetail:", phuongDetail);
+  console.log("toChucDetail", toChucDetail);
+  console.log("ctyDetail", ctyDetail);
+  console.log("gdDetail", gdDetail);
+  console.log("truongDetail", truongDetail);
+
+
+  const [response, setResponse] = useState(null);
+  const [checkChange, setCheckChange]= useState(false);
+  const [errorKQ, setErrorKQ] = useState(null);
+useEffect(()=>{
+  
+  const fetchDataKQ = async () => {
+    // setResponse(null);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        quan: quan||quanDetail||null,
+        phuong: phuong||phuongDetail|| null,
+        congTy: state.cty,
+        truongHoc: state.truong,
+        hoGiaDinh: state.gd
+      })
+    };
+
+    try {
+      const res = await fetch('http://26.164.228.111:8080/query', requestOptions);
+      if (!res.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await res.json();
+      setResponse(data);
+      if(quan==="" && phuong===null){
+        setCheckChange(true);
+      }
+      else setCheckChange(false);
+      setErrorKQ(null);
+    } catch (error) {
+      setErrorKQ('Error fetching data');
+      setResponse(null);
+    }
+  };
+  fetchDataKQ();
+},[quan,quanDetail, phuong, phuongDetail ,state.cty, state.truong, state.gd])
+
+
+ console.log('response', response);
+ console.log('quan', quan);
+ console.log('quanDetail', quanDetail);
+ console.log('phuong', phuong);
+ console.log('phuongDetail', phuongDetail);
+ console.log('state.cty', state.cty);
+ console.log('state.truong', state.truong);
+ console.log('state.gd', state.gd);
+
+ 
+
+const [allCaNhan, setAllCaNhan] = useState([]);
+const [isLoadingCaNhan, setIsLoadingCaNhan] = useState(true);
+const [errorCaNhan, setErrorCaNhan] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://26.164.228.111:8080/getallcanhan');
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const jsonData = await response.json();
+      setAllCaNhan(jsonData);
+    } catch (error) {
+      setErrorCaNhan(error);
+    } finally {
+      setIsLoadingCaNhan(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
+
+const [caNhanPhuong, setCaNhanPhuong] = useState(null);
+
+useEffect(() => {
+  const phuongFinal=  phuong||phuongDetail||null;
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantrongphuong',
+        phuongFinal, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanPhuong(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [phuong, phuongDetail]); 
+
+console.log("caNhanPhuong", caNhanPhuong)
+
+
+
+const [caNhanToChuc, setCaNhanToChuc] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantrongtochuc',
+        toChucDetail, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanToChuc(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [toChucDetail]); 
+
+console.log("caNhanToChuc", caNhanToChuc)
+
+
+const [caNhanCty, setCaNhanCty] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantrongcongty',
+        ctyDetail, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanCty(response.data);
+      console.log("caNhanCty", response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [ctyDetail]); 
+
+console.log("caNhanCty", caNhanCty)
+
+
+
+const [caNhanGD, setCaNhanGD] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantronghogiadinh',
+        gdDetail, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanGD(response.data);
+      console.log("setCaNhanGD", response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [gdDetail]);
+
+const [caNhanTruong, setCaNhanTruong] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantrongtruonghoc',
+        truongDetail, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanTruong(response.data);
+      console.log("setCaNhanGD", response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [truongDetail]);
+
+
+const [caNhanQuan, setCaNhanQuan] = useState(null);
+
+useEffect(() => {
+  const quanFinal=  quan||quanDetail||null;
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        'http://26.164.228.111:8080/getcanhantrongquan',
+        quanFinal, // Dữ liệu JSON là "P001"
+        {
+          headers: {
+            'Content-Type': 'application/json' // Xác định kiểu dữ liệu là JSON
+          }
+        }
+      );
+      setCaNhanQuan(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, [quan, quanDetail]); 
+
+console.log("caNhanQuan", caNhanQuan)
+
+
+const [phuongList, setPhuongList] = useState([]);
+const [isLoadingPhuong, setIsLoadingPhuong] = useState(true);
+const [errorPhuong, setErrorPhuong] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://26.164.228.111:8080/getallphuong');
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const jsonData = await response.json();
+      setPhuongList(jsonData);
+    } catch (error) {
+      setErrorPhuong(error);
+    } finally {
+      setIsLoadingPhuong(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
+
+
+
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://26.164.228.111:8080/getallquan');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  console.log(data);
+  // const filteredPhuongList = phuongList.filter(phuong => phuong.idBHYTQuan === quan);
+  const filteredPhuongList = phuongList.filter(phuong => {
+    if (quan !== '') {
+      return phuong.idBHYTQuan === quan;
+    } else {
+      return phuong.idBHYTQuan === quanDetail;
+    }
+  });
+
+
+  
   return (
     <Box style={{
-        backgroundColor: '#ccc',
+        backgroundColor: 'white',
         width: '100%',
-        height: '1000px'
+        height: 1200,
+        
     }}>
         <Box style={{
             position: 'fixed',
@@ -104,13 +484,10 @@ export default function ExportReport() {
                     <MenuItem value="">
                         <em>Hà Nội</em>
                     </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
                     </Select>
                     {/* <FormHelperText>Disabled</FormHelperText> */}
                 </FormControl>
-                <FormControl sx={{ marginRight: '100px', marginLeft: '100px',marginTop:'15px', minWidth: 200 }}>
+                <FormControl sx={{ marginRight: '100px', marginLeft: '105px',marginTop:'15px', minWidth: 258 }}>
                     <InputLabel id="demo-simple-select-helper-label">Quận</InputLabel>
                     <Select
                     labelId="demo-simple-select-helper-label"
@@ -122,12 +499,15 @@ export default function ExportReport() {
                     <MenuItem value="">
                         <em>None</em>
                     </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    
+                    {data.map((quanItem) => (
+                      <MenuItem key={quanItem.id} value={quanItem.idBHYT}>
+                        {quanItem.ten}
+                      </MenuItem>
+                    ))}
                     </Select>
                 </FormControl>
-                <FormControl sx={{ m: 2, minWidth: 250 }}>
+                <FormControl sx={{ m: 2, minWidth: 258 }}>
                     <InputLabel id="demo-simple-select-helper-label">Phường</InputLabel>
                     <Select
                     labelId="demo-simple-select-helper-label"
@@ -139,9 +519,11 @@ export default function ExportReport() {
                     <MenuItem value="">
                         <em>None</em>
                     </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    {filteredPhuongList.map((phuongItem) => (
+                      <MenuItem key={phuongItem.idBHYT} value={phuongItem.idBHYT}>
+                        {phuongItem.ten}
+                      </MenuItem>
+                    ))}
                     </Select>
                 </FormControl>
             </Box>
@@ -152,315 +534,178 @@ export default function ExportReport() {
                         <FormGroup>
                         <FormControlLabel
                             control={
-                            <Checkbox checked={gilad} onChange={handleChange} name="gilad" />
+                            <Checkbox checked={cty} onChange={handleChange} name="cty" />
                             }
                             label="Công ty"
                         />
                         <FormControlLabel
                             control={
-                            <Checkbox checked={jason} onChange={handleChange} name="jason" />
+                            <Checkbox checked={gd} onChange={handleChange} name="gd" />
                             }
                             label="Hộ gia đình"
                         />
                         <FormControlLabel
                             control={
-                            <Checkbox checked={antoine} onChange={handleChange} name="antoine" />
+                            <Checkbox checked={truong} onChange={handleChange} name="truong" />
                             }
                             label="Trường học"
                         />
                         </FormGroup>
                     </FormControl>
 
-                    <FormControl sx={{
-                        paddingTop: '25px',
-                        marginRight: '100px'
-                    }}
-                    >
-                        <FormLabel id="demo-radio-buttons-group-label">Đóng theo</FormLabel>
-                        <RadioGroup
-                            aria-labelledby="demo-radio-buttons-group-label"
-                            defaultValue="female"
-                            name="radio-buttons-group"
-                            onChange={handleRadioChange}
-                        >
-                            <FormControlLabel value="thang" control={<Radio />} label="Tháng" />
-                            <FormControlLabel value="quy" control={<Radio />} label="Quý" />
-                            <FormControlLabel value="nam" control={<Radio />} label="Năm" />
-                        </RadioGroup>
-                    </FormControl>
+                   
                 </Box>
 
-                <Box>
-                    {
-                        selectedValue==='nam' ? (
-                            <Box>
-                            <Button sx={{ display: 'block', mt: 2 }} onClick={handleOpen1}>
-                                Chọn khoảng {selectedValue} lọc
-                            </Button>
-                            <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                <InputLabel id="demo-controlled-open-select-label">Từ</InputLabel>
-                                <Select
-                                    labelId="demo-controlled-open-select-label"
-                                    id="demo-controlled-open-select"
-                                    open={open1}
-                                    onClose={handleClose1}
-                                    onOpen={handleOpen1}
-                                    value={time1}
-                                    label="Age"
-                                    onChange={handleYearChange1}
-                                    >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
-                                </Select>
+                <Box style={{
+                  display:'flex',
+                  paddingTop: 60
+                }}>
+                <Box style={{
+                  // width: 200,
+                  paddingRight: 116
+                }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker 
+                    label="Chọn ngày bắt đầu"
+                    value={selectedDate1}
+                    onChange={handleDateChange1}
+                    renderInput={(params) => <TextField {...params} />} />
+                </LocalizationProvider>
+                </Box>
 
-                            </FormControl>
-                            <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                <InputLabel id="demo-controlled-open-select-label">Đến</InputLabel>
-                                <Select
-                                    labelId="demo-controlled-open-select-label"
-                                    id="demo-controlled-open-select"
-                                    open={open2}
-                                    onClose={handleClose2}
-                                    onOpen={handleOpen2}
-                                    value={time2}
-                                    label="Age"
-                                    onChange={handleYearChange2}
-                                    >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
-                                </Select>
-
-                            </FormControl>
-                            </Box>
-                        ):  
-                        selectedValue==='quy' ?(
-                            <Box>
-                                <Button sx={{ display: 'block', mt: 2 }} onClick={handleOpen1}>
-                                    Chọn khoảng thời gian lọc
-                                </Button>
-                               <Box style={{display:'flex'}}>
-                                <Box>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                            <InputLabel id="demo-controlled-open-select-label">Từ quý</InputLabel>
-                                            <Select
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                open={open1}
-                                                onClose={handleClose1}
-                                                onOpen={handleOpen1}
-                                                value={time1}
-                                                label="Age"
-                                                onChange={handleYearChange1}
-                                                >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-
-                                        </FormControl>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                            <InputLabel id="demo-controlled-open-select-label">Năm</InputLabel>
-                                            <Select
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                open={open2}
-                                                onClose={handleClose2}
-                                                onOpen={handleOpen2}
-                                                value={time2}
-                                                label="Age"
-                                                onChange={handleYearChange2}
-                                                >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-
-                                        </FormControl>
-                                    </Box>
-                                    <Box  style={{
-                                        display:'flex',
-                                        alignItems: 'center'
-                                    }}>
-                                        <ArrowForwardIcon></ArrowForwardIcon>
-                                    </Box>
-                                    <Box>
-                                            <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                            <InputLabel id="demo-controlled-open-select-label">Đến quý</InputLabel>
-                                            <Select
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                open={open1}
-                                                onClose={handleClose1}
-                                                onOpen={handleOpen1}
-                                                value={time1}
-                                                label="Age"
-                                                onChange={handleYearChange1}
-                                                >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-
-                                        </FormControl>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                            <InputLabel id="demo-controlled-open-select-label">Năm</InputLabel>
-                                            <Select
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                open={open2}
-                                                onClose={handleClose2}
-                                                onOpen={handleOpen2}
-                                                value={time2}
-                                                label="Age"
-                                                onChange={handleYearChange2}
-                                                >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-
-                                        </FormControl>
-                                    </Box>
-                               </Box>
-                            </Box>
-                        ):(
-                            <Box>
-                            <Button sx={{ display: 'block', mt: 2 }} onClick={handleOpen1}>
-                                    Chọn khoảng thời gian lọc
-                                </Button>
-                               <Box style={{display:'flex'}}>
-                                <Box>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                            <InputLabel id="demo-controlled-open-select-label">Từ tháng</InputLabel>
-                                            <Select
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                open={open1}
-                                                onClose={handleClose1}
-                                                onOpen={handleOpen1}
-                                                value={time1}
-                                                label="Age"
-                                                onChange={handleYearChange1}
-                                                >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-
-                                        </FormControl>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                            <InputLabel id="demo-controlled-open-select-label">Năm</InputLabel>
-                                            <Select
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                open={open2}
-                                                onClose={handleClose2}
-                                                onOpen={handleOpen2}
-                                                value={time2}
-                                                label="Age"
-                                                onChange={handleYearChange2}
-                                                >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-
-                                        </FormControl>
-                                    </Box>
-                                    <Box  style={{
-                                        display:'flex',
-                                        alignItems: 'center'
-                                    }}>
-                                        <ArrowForwardIcon></ArrowForwardIcon>
-                                    </Box>
-                                    <Box>
-                                            <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                            <InputLabel id="demo-controlled-open-select-label">Đến tháng</InputLabel>
-                                            <Select
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                open={open1}
-                                                onClose={handleClose1}
-                                                onOpen={handleOpen1}
-                                                value={time1}
-                                                label="Age"
-                                                onChange={handleYearChange1}
-                                                >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-
-                                        </FormControl>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                            <InputLabel id="demo-controlled-open-select-label">Năm</InputLabel>
-                                            <Select
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                open={open2}
-                                                onClose={handleClose2}
-                                                onOpen={handleOpen2}
-                                                value={time2}
-                                                label="Age"
-                                                onChange={handleYearChange2}
-                                                >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-
-                                        </FormControl>
-                                    </Box>
-                               </Box>
-                            </Box>
-                        )
-                    }
+                <Box style={{
+                  // width: 200,
+                  // paddingRight: 110
+                }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker 
+                    label="Chọn ngày kết thúc"
+                    value={selectedDate2}
+                    // minDate={selectedDate1.dayjs}
+                    onChange={handleDateChange2}
+                    renderInput={(params) => <TextField {...params} />} />
+                </LocalizationProvider>
+                </Box>
                     
                 </Box>
             </Box>
-            </Box>
             <Box style={{
-                marginTop: '100px',
-                marginLeft: '50px'
+                display:'flex',
+                justifyContent:'space-between'
             }}>
-                 <Button variant="contained">Lọc</Button>
+            <Box>
+            
             </Box>
+            
+            </Box>
+            </Box>
+           
         </Box>
-        <Box style ={{ display:'flex', justifyContent:'center', width: '100%'}}>
+        <Box style ={{ display:'flex', justifyContent:'center', width: '100%', marginTop: 60}}>
           <Box style={{width: '80%'}} >
-          {/* <TableListBHYT style={{width: '100%'}}></TableListBHYT> */}
+
+         {caNhanTP===false && (quan==='' && quanDetail==='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
+            <TableQuan style={{width: '100%'}}
+            setQuanDetail={setQuanDetail}
+            response={response||data}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableQuan>
+         )}
+
+         {/* {caNhanTP===false && (quan==="") &&(phuong!=='' || phuongDetail!=='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
+            <TableQuan style={{width: '100%'}}
+            setQuanDetail={setQuanDetail}
+            response={response||data}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableQuan>
+         )} */}
+
+
+          
+        {toChucDetail==='' && caNhanTP === false && (state.cty !== false || state.truong!==false || state.gd!== false) && (
+          <TableToChuc 
+          response={response} 
+          setCaNhanTP={setCaNhanTP}
+          setToChucDetail={setToChucDetail}
+          stateLT = {stateLT}
+          setStateLT = {setStateLT}
+          selectedDate1={selectedDate1}
+          selectedDate2={selectedDate2}
+          setCtyDetail={setCtyDetail}
+          setGdDetail={setGdDetail}
+          setTruongDetail={setTruongDetail}>
+          </TableToChuc>
+         )}
+
+
+
+
+         {toChucDetail==='' && caNhanTP ===false && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+          <TableToChuc 
+          response={response} 
+          setCaNhanTP={setCaNhanTP}
+          setToChucDetail={setToChucDetail}
+          stateLT = {stateLT}
+          setStateLT = {setStateLT}
+          selectedDate1={selectedDate1}
+          selectedDate2={selectedDate2}
+          setCtyDetail={setCtyDetail}
+          setGdDetail={setGdDetail}
+          setTruongDetail={setTruongDetail}>
+
+          </TableToChuc>
+         )}
+
+
+
+         {caNhanTP===false &&(quan!=='' || quanDetail!=='') &&(phuong==='' && phuongDetail==='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TablePhuong style={{width: '100%'}}
+            setPhuongDetail={setPhuongDetail}
+            response={response}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TablePhuong>
+         )}
+
+         {caNhanTP===false &&(quan!=='' || quanDetail!=='') &&(phuong===null)&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TablePhuong style={{width: '100%'}}
+            setPhuongDetail={setPhuongDetail}
+            response={response}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TablePhuong>
+         )}
+
+
+
+         {caNhanTP===false &&(quan==='' && quanDetail==='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TablePhuong style={{width: '100%'}}
+            setPhuongDetail={setPhuongDetail}
+            response={response}
+            setCaNhanTP={false}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TablePhuong>
+         )}
+
+    
+        
           </Box>
         </Box>
     </Box>

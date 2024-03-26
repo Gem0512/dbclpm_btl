@@ -198,7 +198,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, setCaNhanTP} = props;
+  const { numSelected, stateLT, setStateLT, setCaNhanTP} = props;
 
   return (
     <Toolbar
@@ -244,11 +244,16 @@ function EnhancedTableToolbar(props) {
                     aria-labelledby="demo-radio-buttons-group-label"
                     defaultValue="1"
                     name="radio-buttons-group"
+                    value={stateLT}
+                    onChange={(e) => {
+                      setStateLT(e.target.value)
+                      }
+                    }
                     // style={{display:'flex'}}
                 >
                     <FormControlLabel value="1" control={<Radio />} label="Đã đóng" />
                     <FormControlLabel value="2" control={<Radio />} label="Chưa đóng" />
-                    <FormControlLabel value="2" control={<Radio />} label="Cả hai" />
+                    <FormControlLabel value="3" control={<Radio />} label="Cả hai" />
                 </RadioGroup>
                 </FormControl>
       </Box>
@@ -260,12 +265,12 @@ function EnhancedTableToolbar(props) {
                 }}
                 onClick={()=>{
                   setCaNhanTP(true);
-                 
+                  setStateLT("3")
                 }}>Danh sách cá nhân</Button>
-                <Button variant="contained" onClick={()=>{
+                {/* <Button variant="contained" onClick={()=>{
                   setCaNhanTP(false);
                  
-                }}>Quay lại</Button>
+                }}>Quay lại</Button> */}
             </Box>
         </Box>
       )}
@@ -291,7 +296,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TablePhuong({setPhuongDetail, response , setCaNhanTP, selectedDate1, selectedDate2}) {
+export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,stateLT, setStateLT, selectedDate1, selectedDate2}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -364,7 +369,7 @@ export default function TablePhuong({setPhuongDetail, response , setCaNhanTP, se
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} setCaNhanTP={setCaNhanTP} />
+        <EnhancedTableToolbar numSelected={selected.length} stateLT = {stateLT} setStateLT = {setStateLT} setCaNhanTP={setCaNhanTP} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -381,6 +386,18 @@ export default function TablePhuong({setPhuongDetail, response , setCaNhanTP, se
             />
             <TableBody>
             {response
+              .filter(row => {
+                console.log(stateLT)
+                if (stateLT === "1") {
+                  return parseInt(row.conNo) !== 0 ? false : true
+                }
+                if (stateLT === "2") {
+                  return parseInt(row.conNo) !== 0 ? true : false
+                }
+                if (stateLT === "3") {
+                  return true
+                }
+              })
               .filter(row => {
                   // Kiểm tra xem selectedDate1 và selectedDate2 có được chọn hay không
                   const isSelectedDateRange = selectedDate1 && selectedDate2;

@@ -24,9 +24,9 @@ import { visuallyHidden } from '@mui/utils';
 import { Button, FormControl, FormLabel, Radio, RadioGroup } from '@mui/material';
 import dayjs from 'dayjs';
 
-function createData(idToChuc, tenToChuc, soLuong, mucDong, daDong, conNo, tuNgay, denNgay, ghiChu) {
+function createData(idToChuc, tenToChuc, soLuong, daDong, conNo, ghiChu) {
   return {
-    idToChuc, tenToChuc, soLuong, mucDong, daDong, conNo, tuNgay, denNgay, ghiChu
+    idToChuc, tenToChuc, soLuong, daDong, conNo, ghiChu
   };
 }
 
@@ -97,12 +97,7 @@ const headCells = [
     disablePadding: false,
     label: 'Số lượng người tham gia',
   },
-  {
-    id: 'mucDong',
-    numeric: true,
-    disablePadding: false,
-    label: 'Mức đóng',
-  },
+
   {
     id: 'daDong',
     numeric: true,
@@ -116,29 +111,17 @@ const headCells = [
     label: 'Còn nợ',
   },
   {
-    id: 'tuNgay',
-    numeric: true,
-    disablePadding: false,
-    label: 'Từ ngày',
-  },
-  {
-    id: 'denNgay',
-    numeric: true,
-    disablePadding: false,
-    label: 'Đến ngày',
-  },
-  {
     id: 'ghiChu',
     numeric: true,
     disablePadding: false,
     label: 'Ghi chú',
   },
-  {
-    id: 'chitiet',
-    numeric: true,
-    disablePadding: false,
-    label: 'Chi tiết',
-  },
+//   {
+//     id: 'chitiet',
+//     numeric: true,
+//     disablePadding: false,
+//     label: 'Chi tiết',
+//   },
 ];
 
 function EnhancedTableHead(props) {
@@ -233,7 +216,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Danh sách BHYT các tổ chức
+          Báo cáo BHYT các tổ chức
         </Typography>
       <Box>
       <FormControl style={{
@@ -260,13 +243,13 @@ function EnhancedTableToolbar(props) {
           <Box style={{
                 paddingTop: 40
             }}>
-                <Button variant="contained" sx={{
+                {/* <Button variant="contained" sx={{
                   marginRight: 10,
                 }}
                 onClick={()=>{
                   setCaNhanTP(true);
                   setStateLT("3")
-                }}>Danh sách cá nhân</Button>
+                }}>Danh sách cá nhân</Button> */}
                 {/* <Button variant="contained" onClick={()=>{
                   setCaNhanTP(false);
                  
@@ -449,19 +432,16 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     </TableCell>
                     <TableCell align="right">{row.ten}</TableCell>
                     <TableCell align="right">{row.soLuong}</TableCell>
-                    <TableCell align="right">{row.mucDong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
-                    <Button variant="contained" color="primary" onClick={()=>{
+                    {/* <Button variant="contained" color="primary" onClick={()=>{
                         setToChucDetail(row.idBHYT);
                         setCtyDetail(row.idBHYT);
                     }}>
                         Chi tiết
-                    </Button>
+                    </Button> */}
                     </TableCell>
                   </TableRow>
                 );
@@ -530,20 +510,10 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     </TableCell>
                     <TableCell align="right">{row.ten}</TableCell>
                     <TableCell align="right">{row.soLuong}</TableCell>
-                    <TableCell align="right">{row.mucDong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
-                    <TableCell align="right" padding="button">
-                    <Button variant="contained" color="primary" onClick={()=>{
-                        setToChucDetail(row.idBHYT);
-                        setTruongDetail(row.idBHYT)
-                    }}>
-                        Chi tiết
-                    </Button>
-                    </TableCell>
+                  
                   </TableRow>
                 );
             }
@@ -611,20 +581,10 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     </TableCell>
                     <TableCell align="right">{row.ten}</TableCell>
                     <TableCell align="right">{row.soLuong}</TableCell>
-                    <TableCell align="right">{row.mucDong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
-                    <TableCell align="right" padding="button">
-                    <Button variant="contained" color="primary" onClick={()=>{
-                        setToChucDetail(row.idBHYT);
-                        setGdDetail(row.idBHYT)
-                    }}>
-                        Chi tiết
-                    </Button>
-                    </TableCell>
+                   
                   </TableRow>
                 );
             }

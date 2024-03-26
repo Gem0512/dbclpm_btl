@@ -24,9 +24,9 @@ import { visuallyHidden } from '@mui/utils';
 import { Button, FormControl, FormLabel, Radio, RadioGroup } from '@mui/material';
 import dayjs from 'dayjs';
 
-function createData(idToChuc, tenToChuc, soLuong, mucDong, daDong, conNo, tuNgay, denNgay, ghiChu) {
+function createData(idPhuong, tenPhuong, soLuong, mucDong, daDong, conNo, tuNgay, denNgay, ghiChu) {
   return {
-    idToChuc, tenToChuc, soLuong, mucDong, daDong, conNo, tuNgay, denNgay, ghiChu
+    idPhuong, tenPhuong, soLuong, mucDong, daDong, conNo, tuNgay, denNgay, ghiChu
   };
 }
 
@@ -80,16 +80,16 @@ function stableSort(array, comparator) {
 // idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu
 const headCells = [
   {
-    id: 'idToChuc',
+    id: 'idPhuong',
     numeric: false,
     disablePadding: true,
     label: 'ID',
   },
   {
-    id: 'tenToChuc',
+    id: 'tenPhuong',
     numeric: true,
     disablePadding: false,
-    label: 'Tên tổ chức',
+    label: 'Tên Phường',
   },
   {
     id: 'soLuong',
@@ -98,34 +98,16 @@ const headCells = [
     label: 'Số lượng người tham gia',
   },
   {
-    id: 'mucDong',
-    numeric: true,
-    disablePadding: false,
-    label: 'Mức đóng',
-  },
-  {
     id: 'daDong',
     numeric: true,
     disablePadding: false,
-    label: 'Đã đóng',
+    label: 'Dã đóng',
   },
   {
     id: 'conNo',
     numeric: true,
     disablePadding: false,
     label: 'Còn nợ',
-  },
-  {
-    id: 'tuNgay',
-    numeric: true,
-    disablePadding: false,
-    label: 'Từ ngày',
-  },
-  {
-    id: 'denNgay',
-    numeric: true,
-    disablePadding: false,
-    label: 'Đến ngày',
   },
   {
     id: 'ghiChu',
@@ -198,7 +180,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected,stateLT, setStateLT, setCaNhanTP } = props;
+  const { numSelected, stateLT, setStateLT, setCaNhanTP} = props;
 
   return (
     <Toolbar
@@ -233,7 +215,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Danh sách BHYT các tổ chức
+          Báo cáo BHYT các phường
         </Typography>
       <Box>
       <FormControl style={{
@@ -260,13 +242,13 @@ function EnhancedTableToolbar(props) {
           <Box style={{
                 paddingTop: 40
             }}>
-                <Button variant="contained" sx={{
+                {/* <Button variant="contained" sx={{
                   marginRight: 10,
                 }}
                 onClick={()=>{
                   setCaNhanTP(true);
                   setStateLT("3")
-                }}>Danh sách cá nhân</Button>
+                }}>Danh sách cá nhân</Button> */}
                 {/* <Button variant="contained" onClick={()=>{
                   setCaNhanTP(false);
                  
@@ -296,7 +278,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stateLT, setStateLT, selectedDate1, selectedDate2, setCtyDetail, setGdDetail, setTruongDetail}) {
+export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,stateLT, setStateLT, selectedDate1, selectedDate2}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -366,12 +348,13 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
     [order, orderBy, page, rowsPerPage],
   );
 
-  console.log("YYYYYYY", response)
-
+  const totalSL = response.reduce((acc, curr) => acc + curr.soLuong, 0);
+  const totalDaDong = response.reduce((acc, curr) => acc + curr.daDong, 0);
+  const totalConNo = response.reduce((acc, curr) => acc + curr.conNo, 0);
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} stateLT ={stateLT} setStateLT ={setStateLT} setCaNhanTP={setCaNhanTP}/>
+        <EnhancedTableToolbar numSelected={selected.length} stateLT = {stateLT} setStateLT = {setStateLT} setCaNhanTP={setCaNhanTP} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -387,11 +370,9 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
               rowCount={rows.length}
             />
             <TableBody>
-            {/* {response.CongTy.} */}
-            {response && response.CongTy && response.CongTy
+            {response
               .filter(row => {
-                // console.log(stateLT)
-                console.log(row.conNo)
+                console.log(stateLT)
                 if (stateLT === "1") {
                   return parseInt(row.conNo) !== 0 ? false : true
                 }
@@ -415,7 +396,7 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                   return !isSelectedDateRange || isDateInRange;
               })
               .map((row, index) => {
-              const isItemSelected = isSelected(row.id);
+                const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -438,7 +419,6 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                         }}
                       />
                     </TableCell>
-{/* // idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu */}
                     <TableCell
                       component="th"
                       id={labelId}
@@ -449,188 +429,46 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     </TableCell>
                     <TableCell align="right">{row.ten}</TableCell>
                     <TableCell align="right">{row.soLuong}</TableCell>
-                    <TableCell align="right">{row.mucDong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{
-                        setToChucDetail(row.idBHYT);
-                        setCtyDetail(row.idBHYT);
+                        setPhuongDetail(row.idBHYT)
                     }}>
                         Chi tiết
                     </Button>
                     </TableCell>
                   </TableRow>
                 );
-            }
-       
-      )}
+              })}
 
-      {response && response.TruongHoc && response.TruongHoc
-              .filter(row => {
-                // console.log(stateLT)
-                console.log(row.conNo)
-                if (stateLT === "1") {
-                  return parseInt(row.conNo) !== 0 ? false : true
-                }
-                if (stateLT === "2") {
-                  return parseInt(row.conNo) !== 0 ? true : false
-                }
-                if (stateLT === "3") {
-                  return true
-                }
-              })
-              .filter(row => {
-                  // Kiểm tra xem selectedDate1 và selectedDate2 có được chọn hay không
-                  const isSelectedDateRange = selectedDate1 && selectedDate2;
-
-                  // Kiểm tra xem ngày của mục nằm trong khoảng [selectedDate1, selectedDate2] hay không
-                  const isDateInRange = isSelectedDateRange && 
-                      new Date(row.tuNgay) >= new Date(selectedDate1) && 
-                      new Date(row.denNgay) <= new Date(selectedDate2);
-
-                  // Trả về true nếu không có khoảng ngày được chọn hoặc mục nằm trong khoảng ngày được chọn
-                  return !isSelectedDateRange || isDateInRange;
-              })
-              .map((row, index) => {
-              const isItemSelected = isSelected(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
-
-                return (
-                  <TableRow
-                    hover
-                    // onClick={(event) => handleClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
-{/* // idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu */}
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.idBHYT}
-                    </TableCell>
-                    <TableCell align="right">{row.ten}</TableCell>
-                    <TableCell align="right">{row.soLuong}</TableCell>
-                    <TableCell align="right">{row.mucDong}</TableCell>
-                    <TableCell align="right">{row.daDong}</TableCell>
-                    <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{row.ghiChu}</TableCell>
-                    <TableCell align="right" padding="button">
-                    <Button variant="contained" color="primary" onClick={()=>{
-                        setToChucDetail(row.idBHYT);
-                        setTruongDetail(row.idBHYT)
-                    }}>
-                        Chi tiết
-                    </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-            }
-       
-      )}
-
-      {response && response.HoGiaDinh && response.HoGiaDinh
-              .filter(row => {
-                // console.log(stateLT)
-                console.log(row.conNo)
-                if (stateLT === "1") {
-                  return parseInt(row.conNo) !== 0 ? false : true
-                }
-                if (stateLT === "2") {
-                  return parseInt(row.conNo) !== 0 ? true : false
-                }
-                if (stateLT === "3") {
-                  return true
-                }
-              })
-              .filter(row => {
-                  // Kiểm tra xem selectedDate1 và selectedDate2 có được chọn hay không
-                  const isSelectedDateRange = selectedDate1 && selectedDate2;
-
-                  // Kiểm tra xem ngày của mục nằm trong khoảng [selectedDate1, selectedDate2] hay không
-                  const isDateInRange = isSelectedDateRange && 
-                      new Date(row.tuNgay) >= new Date(selectedDate1) && 
-                      new Date(row.denNgay) <= new Date(selectedDate2);
-
-                  // Trả về true nếu không có khoảng ngày được chọn hoặc mục nằm trong khoảng ngày được chọn
-                  return !isSelectedDateRange || isDateInRange;
-              })
-              .map((row, index) => {
-              const isItemSelected = isSelected(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
-
-                return (
-                  <TableRow
-                    hover
-                    // onClick={(event) => handleClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
-{/* // idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu */}
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.idBHYT}
-                    </TableCell>
-                    <TableCell align="right">{row.ten}</TableCell>
-                    <TableCell align="right">{row.soLuong}</TableCell>
-                    <TableCell align="right">{row.mucDong}</TableCell>
-                    <TableCell align="right">{row.daDong}</TableCell>
-                    <TableCell align="right">{row.conNo}</TableCell>
-                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{row.ghiChu}</TableCell>
-                    <TableCell align="right" padding="button">
-                    <Button variant="contained" color="primary" onClick={()=>{
-                        setToChucDetail(row.idBHYT);
-                        setGdDetail(row.idBHYT)
-                    }}>
-                        Chi tiết
-                    </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-            }
-       
-      )}
-              
+              <TableRow sx={{ cursor: 'pointer' }}>
+                <TableCell align="right">
+                    
+                </TableCell>
+                <TableCell align="right">
+                    
+                </TableCell>
+                <TableCell align="right">
+                    Tổng
+                </TableCell>
+                <TableCell align="right">
+                    {totalSL}
+                </TableCell>
+                <TableCell align="right">
+                    {totalDaDong}
+                </TableCell>
+                <TableCell align="right">
+                    {totalConNo}
+                </TableCell>
+                <TableCell align="right">
+                    
+                </TableCell>
+                <TableCell align="right">
+                    
+                </TableCell>
+              </TableRow>
               {/* id, ten, diaChi, tuoi, mucDong, trangThai, ghiChu, kiHan, thoiGian */}
               {emptyRows > 0 && (
                 <TableRow
