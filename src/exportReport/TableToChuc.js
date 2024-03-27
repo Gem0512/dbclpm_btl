@@ -111,6 +111,18 @@ const headCells = [
     label: 'Còn nợ',
   },
   {
+    id: 'tuNgay',
+    numeric: true,
+    disablePadding: false,
+    label: 'Từ ngày',
+  },
+  {
+    id: 'denNgay',
+    numeric: true,
+    disablePadding: false,
+    label: 'Đến ngày',
+  },
+  {
     id: 'ghiChu',
     numeric: true,
     disablePadding: false,
@@ -349,10 +361,48 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
     [order, orderBy, page, rowsPerPage],
   );
 
-  console.log("YYYYYYY", response)
-  const totalSL = response?.CongTy?.reduce((acc, curr) => acc + curr.soLuong, 0) +  response?.TruongHoc?.reduce((acc, curr) => acc + curr.soLuong, 0) + response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.soLuong, 0);
-  const totalDaDong = response?.CongTy?.reduce((acc, curr) => acc + curr.daDong, 0) + response?.TruongHoc?.reduce((acc, curr) => acc + curr.daDong, 0) + response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.daDong, 0);
-  const totalConNo = response?.CongTy?.reduce((acc, curr) => acc + curr.conNo, 0)+ response?.TruongHoc?.reduce((acc, curr) => acc + curr.conNo, 0) + response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.conNo, 0);
+  console.log("YYYYYYhhhhhY", 3+  response?.TruongHoc?.reduce((acc, curr) => acc + curr.soLuong, 0))
+  let tongSL=0;
+ if(response?.CongTy?.reduce((acc, curr) => acc + curr.soLuong, 0) ){
+  tongSL =  tongSL+ response?.CongTy?.reduce((acc, curr) => acc + curr.soLuong, 0);
+ }
+ if(response?.TruongHoc?.reduce((acc, curr) => acc + curr.soLuong, 0) ){
+  tongSL =  tongSL+ response?.TruongHoc?.reduce((acc, curr) => acc + curr.soLuong, 0);
+ }
+ if(response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.soLuong, 0) ){
+  tongSL =  tongSL+ response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.soLuong, 0);
+ }
+
+
+
+ let tongDaDong=0;
+ if(response?.CongTy?.reduce((acc, curr) => acc + curr.daDong, 0) ){
+  tongDaDong =  tongDaDong+ response?.CongTy?.reduce((acc, curr) => acc + curr.daDong, 0);
+ }
+ if(response?.TruongHoc?.reduce((acc, curr) => acc + curr.daDong, 0) ){
+  tongDaDong =  tongDaDong+ response?.TruongHoc?.reduce((acc, curr) => acc + curr.daDong, 0);
+ }
+ if(response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.daDong, 0) ){
+  tongDaDong =  tongDaDong+ response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.daDong, 0);
+ }
+
+
+ let tongConNo=0;
+ if(response?.CongTy?.reduce((acc, curr) => acc + curr.conNo, 0) ){
+  tongConNo =  tongConNo+ response?.CongTy?.reduce((acc, curr) => acc + curr.conNo, 0);
+ }
+ if(response?.TruongHoc?.reduce((acc, curr) => acc + curr.conNo, 0) ){
+  tongConNo =  tongConNo+ response?.TruongHoc?.reduce((acc, curr) => acc + curr.conNo, 0);
+ }
+ if(response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.conNo, 0) ){
+  tongConNo =  tongConNo+ response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.conNo, 0);
+ }
+
+
+
+  const totalSL = response?.CongTy?.reduce((acc, curr) => acc + curr.soLuong, 0)||0 +  response?.TruongHoc?.reduce((acc, curr) => acc + curr.soLuong, 0)||0 + response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.soLuong, 0)||0;
+  const totalDaDong = response?.CongTy?.reduce((acc, curr) => acc + curr.daDong, 0)||0 + response?.TruongHoc?.reduce((acc, curr) => acc + curr.daDong, 0)||0 + response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.daDong, 0)||0;
+  const totalConNo = response?.CongTy?.reduce((acc, curr) => acc + curr.conNo, 0)||0+ response?.TruongHoc?.reduce((acc, curr) => acc + curr.conNo, 0)||0 + response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.conNo, 0)||0;
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -436,6 +486,8 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     <TableCell align="right">{row.soLuong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
+                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     {/* <Button variant="contained" color="primary" onClick={()=>{
@@ -514,6 +566,8 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     <TableCell align="right">{row.soLuong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
+                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                   
                   </TableRow>
@@ -585,6 +639,8 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     <TableCell align="right">{row.soLuong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
+                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                    
                   </TableRow>
@@ -603,13 +659,13 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     Tổng
                 </TableCell>
                 <TableCell align="right">
-                    {totalSL}
+                    {tongSL}
                 </TableCell>
                 <TableCell align="right">
-                    {totalDaDong}
+                    {tongDaDong}
                 </TableCell>
                 <TableCell align="right">
-                    {totalConNo}
+                    {tongConNo}
                 </TableCell>
                 <TableCell align="right">
                     

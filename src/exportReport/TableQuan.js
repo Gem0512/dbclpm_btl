@@ -110,6 +110,18 @@ const headCells = [
     label: 'Còn nợ',
   },
   {
+    id: 'tuNgay',
+    numeric: true,
+    disablePadding: false,
+    label: 'Từ ngày',
+  },
+  {
+    id: 'denNgay',
+    numeric: true,
+    disablePadding: false,
+    label: 'Đến ngày',
+  },
+  {
     id: 'ghiChu',
     numeric: true,
     disablePadding: false,
@@ -437,6 +449,8 @@ export default function TableQuan({setQuanDetail, response, setCaNhanTP, stateLT
                     <TableCell align="right">{row.soLuong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
+                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{

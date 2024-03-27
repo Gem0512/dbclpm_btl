@@ -194,7 +194,7 @@ const [response, setResponse] =useState('');
                             <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">đ</InputAdornment>}
+                                startAdornment={<InputAdornment position="start">%</InputAdornment>}
                                 label="Amount"
                                 value={tiLeHS}
                                 onChange={handleTiLeHSChange}
@@ -215,7 +215,7 @@ const [response, setResponse] =useState('');
                             <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">đ</InputAdornment>}
+                                startAdornment={<InputAdornment position="start">%</InputAdornment>}
                                 label="Amount"
                                 value={tiLePhaiDongHS}
                                 onChange={handleTiLePhaiDongHSChange}
@@ -253,7 +253,7 @@ const [response, setResponse] =useState('');
                             <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">đ</InputAdornment>}
+                                startAdornment={<InputAdornment position="start">%</InputAdornment>}
                                 label="Amount"
                                 value={tiLeCT}
                                 onChange={handleTiLeCTChange}
@@ -274,7 +274,7 @@ const [response, setResponse] =useState('');
                             <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">đ</InputAdornment>}
+                                startAdornment={<InputAdornment position="start">%</InputAdornment>}
                                 label="Amount"
                                 value={tiLeCN}
                                 onChange={handleTiLeCNChange}
@@ -332,7 +332,7 @@ const [response, setResponse] =useState('');
                             <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">đ</InputAdornment>}
+                                startAdornment={<InputAdornment position="start">%</InputAdornment>}
                                 label="Amount"
                                 value={tiLeTV1}
                                 onChange={handleTiLeTV1Change}
@@ -354,7 +354,7 @@ const [response, setResponse] =useState('');
                             <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">đ</InputAdornment>}
+                                startAdornment={<InputAdornment position="start">%</InputAdornment>}
                                 label="Amount"
                                 value={tiLeTV2}
                                 onChange={handleTiLeTV2Change}
@@ -376,7 +376,7 @@ const [response, setResponse] =useState('');
                             <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">đ</InputAdornment>}
+                                startAdornment={<InputAdornment position="start">%</InputAdornment>}
                                 label="Amount"
                                 value={tiLeTV3}
                                 onChange={handleTiLeTV3Change}
@@ -398,7 +398,7 @@ const [response, setResponse] =useState('');
                             <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">đ</InputAdornment>}
+                                startAdornment={<InputAdornment position="start">%</InputAdornment>}
                                 label="Amount"
                                 value={tiLeTV4}
                                 onChange={handleTiLeTV4Change}
@@ -420,7 +420,7 @@ const [response, setResponse] =useState('');
                             <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">đ</InputAdornment>}
+                                startAdornment={<InputAdornment position="start">%</InputAdornment>}
                                 label="Amount"
                                 value={tiLeTV5}
                                 onChange={handleTiLeTV5Change}

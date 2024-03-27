@@ -489,8 +489,8 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
 
                   // Kiểm tra xem ngày của mục nằm trong khoảng [selectedDate1, selectedDate2] hay không
                   const isDateInRange = isSelectedDateRange && 
-                      new Date(row.tuNgay) >= new Date(selectedDate1) && 
-                      new Date(row.denNgay) <= new Date(selectedDate2);
+                      new Date(row.tuNgay+10000) >= new Date(selectedDate1) && 
+                      new Date(row.denNgay-10000) <= new Date(selectedDate2);
 
                   // Trả về true nếu không có khoảng ngày được chọn hoặc mục nằm trong khoảng ngày được chọn
                   return !isSelectedDateRange || isDateInRange;
