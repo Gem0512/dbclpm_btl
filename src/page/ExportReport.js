@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from '@mui/material'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import TableQuan from '../exportReport/TableQuan';
 import TablePhuong from '../exportReport/TablePhuong';
 import TableToChuc from '../exportReport/TableToChuc';
@@ -9,15 +10,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import axios from 'axios';
 import dayjs from 'dayjs';
 
-export default function ListBHYT() {
+export default function ExportReport() {
 
-  const [quan, setQuan] = React.useState('');
-  const [phuong, setPhuong] = React.useState('');
+  const [quan, setQuan] = React.useState(null);
+  const [phuong, setPhuong] = React.useState(null);
   const [stateLT, setStateLT] = React.useState("3");
 
   const handleQuanChange = (event) => {
     setQuan(event.target.value);
-    if(event.target.value===""){
+    if(event.target.value===null){
       setPhuong(null);
     }
     console.log("Quận:", quan);
@@ -146,9 +147,19 @@ export default function ListBHYT() {
   console.log("truongDetail", truongDetail);
 
 
-  const [response, setResponse] = useState(null);
+  const [response, setResponse] = useState("");
   const [checkChange, setCheckChange]= useState(false);
   const [errorKQ, setErrorKQ] = useState(null);
+
+
+  const [dsQuan, setDsQuan]= useState(null);
+  const [dsPhuong, setDsPhuong]= useState(null);
+  const [dsToChuc, setDsToChuc]= useState(null);
+  const [dsCaNhan, setDsCaNhan]= useState(null);
+
+  console.log("dsQuan", dsQuan);
+  console.log("dsPhuong", dsPhuong);
+  console.log("dsToChuc", dsToChuc);
 useEffect(()=>{
   
   const fetchDataKQ = async () => {
@@ -157,8 +168,8 @@ useEffect(()=>{
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        quan: quan||quanDetail||null,
-        phuong: phuong||phuongDetail|| null,
+        quan: quan||null,
+        phuong: phuong|| null,
         congTy: state.cty,
         truongHoc: state.truong,
         hoGiaDinh: state.gd
@@ -166,16 +177,55 @@ useEffect(()=>{
     };
 
     try {
-      const res = await fetch('http://26.164.228.111:8080/query', requestOptions);
+      const res = await fetch('http://26.164.228.111:8080/query', requestOptions).
+      then(
+
+      );
       if (!res.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await res.json();
       setResponse(data);
-      if(quan==="" && phuong===null){
-        setCheckChange(true);
+      
+
+      if( quan===null ){
+        if(state.cty === false && state.truong===false && state.gd=== false){
+          setDsQuan(data);
+        }
+        else {
+          setDsToChuc(data);
+        }
+      } else {
+        if(phuong===null){
+          if(state.cty === false && state.truong===false && state.gd=== false){
+            setDsPhuong(data);
+          }
+          else {
+            setDsToChuc(data);
+          }
+        }
+        else{ 
+            setDsToChuc(data);
+        }
       }
-      else setCheckChange(false);
+      // if((quan==='' && quanDetail==='')){
+      //   setDsQuan(data);
+      // } 
+      // else if((quan==='' && quanDetail==='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty === false && state.truong===false && state.gd=== false)){
+      //   setDsToChuc(data);
+      //   }
+      // else if(state.cty === true || state.truong===true || state.gd=== true){
+      //   setDsToChuc(data);
+      // }
+      // else if((quan!=='' || quanDetail!=='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false)){
+      //   setDsPhuong(data);
+      //   }
+      // else if((quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty === false && state.truong===false && state.gd=== false)){
+      //     setDsToChuc(data);
+      //     }
+      // else if(caNhanTP || toChucDetail){
+      //   setDsCaNhan(data);
+      //   }
       setErrorKQ(null);
     } catch (error) {
       setErrorKQ('Error fetching data');
@@ -402,7 +452,9 @@ useEffect(() => {
   fetchData();
 }, []);
 
-
+useEffect(() => {
+  document.title = 'Xuất báo cáo';
+}, []);
 
 
   const [data, setData] = useState(null);
@@ -496,7 +548,7 @@ useEffect(() => {
                     label="Quận"
                     onChange={handleQuanChange}
                     >
-                    <MenuItem value="">
+                    <MenuItem value={null}>
                         <em>None</em>
                     </MenuItem>
                     
@@ -516,7 +568,7 @@ useEffect(() => {
                     label="Phường"
                     onChange={handlePhuongChange}
                     >
-                    <MenuItem value="">
+                    <MenuItem value={null}>
                         <em>None</em>
                     </MenuItem>
                     {filteredPhuongList.map((phuongItem) => (
@@ -604,7 +656,126 @@ useEffect(() => {
         <Box style ={{ display:'flex', justifyContent:'center', width: '100%', marginTop: 60}}>
           <Box style={{width: '80%'}} >
 
-         {caNhanTP===false && (quan==='' && quanDetail==='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
+          {/* const [dsQuan, setDsQuan]= useState(null);
+  const [dsPhuong, setDsPhuong]= useState(null);
+  const [dsToChuc, setDsToChuc]= useState(null);
+  const [dsCaNhan, setDsCaNhan]= useState(null); */}
+
+
+      {/* if( quan===null ){
+            if(state.cty === false && state.truong===false && state.gd=== false){
+              setDsQuan(data);
+            }
+            else {
+              setDsToChuc(data);
+            }
+          } else {
+            if(phuong===null){
+              if(state.cty === false && state.truong===false && state.gd=== false){
+                setDsPhuong(data);
+              }
+              else {
+                setDsToChuc(data);
+              }
+            }
+            else{ 
+                setDsToChuc(data);
+            }
+          } */}
+
+          {
+            quan===null?(
+              (state.cty === false && state.truong===false && state.gd=== false)?(
+                dsQuan && (
+                  <TableQuan style={{width: '100%'}}
+            setQuanDetail={setQuanDetail}
+            response={dsQuan||data}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            setQuan={setQuan}
+            ></TableQuan>
+                )
+              ):(
+                dsToChuc && (
+                  <TableToChuc 
+          response={dsToChuc} 
+          setCaNhanTP={setCaNhanTP}
+          setToChucDetail={setToChucDetail}
+          stateLT = {stateLT}
+          setStateLT = {setStateLT}
+          selectedDate1={selectedDate1}
+          selectedDate2={selectedDate2}
+          setCtyDetail={setCtyDetail}
+          setGdDetail={setGdDetail}
+          setTruongDetail={setTruongDetail}
+          // setToChuc={setToChuc}
+          >
+          </TableToChuc>
+                )
+              )
+            ):(
+              phuong===null?(
+                dsPhuong && (state.cty === false && state.truong===false && state.gd=== false)?(
+                  <TablePhuong style={{width: '100%'}}
+            setPhuongDetail={setPhuongDetail}
+            response={dsPhuong}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            setPhuong={setPhuong}
+            ></TablePhuong>
+                ):(
+                  dsToChuc && (
+                  <TableToChuc 
+          response={dsToChuc} 
+          setCaNhanTP={setCaNhanTP}
+          setToChucDetail={setToChucDetail}
+          stateLT = {stateLT}
+          setStateLT = {setStateLT}
+          selectedDate1={selectedDate1}
+          selectedDate2={selectedDate2}
+          setCtyDetail={setCtyDetail}
+          setGdDetail={setGdDetail}
+          setTruongDetail={setTruongDetail}>
+          </TableToChuc>
+                )
+                )
+              ):(
+                dsToChuc && (
+                  <TableToChuc 
+          response={dsToChuc} 
+          setCaNhanTP={setCaNhanTP}
+          setToChucDetail={setToChucDetail}
+          stateLT = {stateLT}
+          setStateLT = {setStateLT}
+          selectedDate1={selectedDate1}
+          selectedDate2={selectedDate2}
+          setCtyDetail={setCtyDetail}
+          setGdDetail={setGdDetail}
+          setTruongDetail={setTruongDetail}>
+          </TableToChuc>
+                )
+              )
+            )
+          }
+         {/* {caNhanTP===false && (quan==='' && quanDetail==='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
+            <TableQuan style={{width: '100%'}}
+            setQuanDetail={setQuanDetail}
+            response={dsQuan||data}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableQuan>
+         )}
+
+         {caNhanTP===false && (quan==="") &&(phuong!=='' || phuongDetail!=='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
             <TableQuan style={{width: '100%'}}
             setQuanDetail={setQuanDetail}
             response={response||data}
@@ -616,23 +787,25 @@ useEffect(() => {
             ></TableQuan>
          )}
 
-         {/* {caNhanTP===false && (quan==="") &&(phuong!=='' || phuongDetail!=='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
-            <TableQuan style={{width: '100%'}}
-            setQuanDetail={setQuanDetail}
-            response={response||data}
+         {
+          caNhanTP && (quan==='' && quanDetail==='') &&(phuong==='' && phuongDetail==='')&& (state.cty === false && state.truong===false && state.gd=== false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={allCaNhan}
             setCaNhanTP={setCaNhanTP}
             stateLT = {stateLT}
             setStateLT = {setStateLT}
             selectedDate1={selectedDate1}
             selectedDate2={selectedDate2}
-            ></TableQuan>
-         )} */}
+            ></TableCaNhan>
+          )
+         }
+
 
 
           
         {toChucDetail==='' && caNhanTP === false && (state.cty !== false || state.truong!==false || state.gd!== false) && (
           <TableToChuc 
-          response={response} 
+          response={dsToChuc} 
           setCaNhanTP={setCaNhanTP}
           setToChucDetail={setToChucDetail}
           stateLT = {stateLT}
@@ -645,12 +818,35 @@ useEffect(() => {
           </TableToChuc>
          )}
 
+         {
+          (caNhanTP)  && (state.cty !== false || state.truong!==false || state.gd!== false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanPhuong}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableCaNhan>
+          )
+         }
+
+         {
+          (toChucDetail!=='')  && (state.cty !== false || state.truong!==false || state.gd!== false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanToChuc}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}></TableCaNhan>
+          )
+         }
 
 
-
-         {toChucDetail==='' && caNhanTP ===false && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+         {toChucDetail==='' && caNhanTP ===false && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='') && phuong !== null && quan !== null && (state.cty ===false && state.truong===false && state.gd===false) && (
           <TableToChuc 
-          response={response} 
+          response={dsToChuc} 
           setCaNhanTP={setCaNhanTP}
           setToChucDetail={setToChucDetail}
           stateLT = {stateLT}
@@ -664,12 +860,35 @@ useEffect(() => {
           </TableToChuc>
          )}
 
+         {
+          (caNhanTP) && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanPhuong }
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableCaNhan>
+          )
+         }
 
+         {
+          (toChucDetail!=='') && (quan!=='' || quanDetail!=='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanToChuc }
+            setCaNhanTP={setCaNhanTP}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableCaNhan>
+          )
+         }
 
+        
          {caNhanTP===false &&(quan!=='' || quanDetail!=='') &&(phuong==='' && phuongDetail==='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TablePhuong style={{width: '100%'}}
             setPhuongDetail={setPhuongDetail}
-            response={response}
+            response={dsPhuong}
             setCaNhanTP={setCaNhanTP}
             stateLT = {stateLT}
             setStateLT = {setStateLT}
@@ -681,7 +900,7 @@ useEffect(() => {
          {caNhanTP===false &&(quan!=='' || quanDetail!=='') &&(phuong===null)&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TablePhuong style={{width: '100%'}}
             setPhuongDetail={setPhuongDetail}
-            response={response}
+            response={dsPhuong}
             setCaNhanTP={setCaNhanTP}
             stateLT = {stateLT}
             setStateLT = {setStateLT}
@@ -691,11 +910,23 @@ useEffect(() => {
          )}
 
 
+         {
+          (caNhanTP)  &&(quan!=='' || quanDetail!=='') &&(phuong==='' && phuongDetail==='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanQuan}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}
+            ></TableCaNhan>
+          )
+         }
 
          {caNhanTP===false &&(quan==='' && quanDetail==='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
             <TablePhuong style={{width: '100%'}}
             setPhuongDetail={setPhuongDetail}
-            response={response}
+            response={dsPhuong}
             setCaNhanTP={false}
             stateLT = {stateLT}
             setStateLT = {setStateLT}
@@ -704,8 +935,50 @@ useEffect(() => {
             ></TablePhuong>
          )}
 
-    
-        
+         {
+          (caNhanTP) &&(quan==='' && quanDetail==='') &&(phuong!=='' || phuongDetail!=='')&& (state.cty ===false && state.truong===false && state.gd===false) && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanQuan}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}></TableCaNhan>
+          )
+         }
+         {
+          ctyDetail && caNhanCty && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanCty}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}></TableCaNhan>
+          )
+         }
+         {
+          gdDetail && caNhanGD && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanGD}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}></TableCaNhan>
+          )
+         }
+         {
+          truongDetail && caNhanTruong && (
+            <TableCaNhan style={{width: '100%'}}
+            allCaNhan={caNhanTruong}
+            setCaNhanTP={setCaNhanTP}
+            stateLT = {stateLT}
+            setStateLT = {setStateLT}
+            selectedDate1={selectedDate1}
+            selectedDate2={selectedDate2}></TableCaNhan>
+          )
+         } */}
           </Box>
         </Box>
     </Box>

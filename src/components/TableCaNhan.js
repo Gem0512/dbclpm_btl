@@ -161,12 +161,6 @@ const headCells = [
     label: 'Đến ngày',
   },
   {
-    id: 'dongTheo',
-    numeric: true,
-    disablePadding: false,
-    label: 'Đóng theo',
-  },
-  {
     id: 'noiDki',
     numeric: true,
     disablePadding: false,
@@ -185,7 +179,7 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
+          {/* <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -193,7 +187,7 @@ function EnhancedTableHead(props) {
             inputProps={{
               'aria-label': 'select all desserts',
             }}
-          />
+          /> */}
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -452,13 +446,13 @@ export default function TableCaNhan({allCaNhan, setCaNhanTP, stateLT, setStateLT
                     sx={{ cursor: 'pointer' }}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox
+                      {/* <Checkbox
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
                           'aria-labelledby': labelId,
                         }}
-                      />
+                      /> */}
                     </TableCell>
                     <TableCell
                       component="th"
@@ -472,17 +466,26 @@ export default function TableCaNhan({allCaNhan, setCaNhanTP, stateLT, setStateLT
 
                     <TableCell align="right">{row.ten}</TableCell>
                     <TableCell align="right">{row.diaChi}</TableCell>
-                    <TableCell align="right">{row.ngaySinh}</TableCell>
-                    <TableCell align="right">{row.gioiTinh}</TableCell>
+                    <TableCell align="right">{dayjs(row.ngaySinh).format('DD-MM-YYYY')}</TableCell>
+                    <TableCell align="right">
+                      {
+                        row.gioiTinh===1?(
+                          <Box>
+                          Nam
+                          </Box>
+                        ):(
+                          <Box>Nữ</Box>
+                        )
+                          }
+                    </TableCell>
                     <TableCell align="right">{row.luong}</TableCell>
                     <TableCell align="right">{row.mucDong}</TableCell>
                     <TableCell align="right">{row.daDong}</TableCell>
                     <TableCell align="right">{row.conNo}</TableCell>
                     <TableCell align="right">{row.dienMienGiam}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
-                    <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{row.dongTheo}</TableCell>
+                    <TableCell align="right">{dayjs(row.tuNgay).format('DD-MM-YYYY')}</TableCell>
+                    <TableCell align="right">{dayjs(row.denNgay).format('DD-MM-YYYY')}</TableCell>
                     <TableCell align="right">{row.noiDki}</TableCell>
 
                   </TableRow>

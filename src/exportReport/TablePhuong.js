@@ -101,7 +101,7 @@ const headCells = [
     id: 'daDong',
     numeric: true,
     disablePadding: false,
-    label: 'Dã đóng',
+    label: 'Đã đóng',
   },
   {
     id: 'conNo',
@@ -133,21 +133,11 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
+        
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align={headCell.numeric ? 'right' : 'right'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -278,7 +268,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,stateLT, setStateLT, selectedDate1, selectedDate2}) {
+export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,stateLT, setStateLT, selectedDate1, selectedDate2, setPhuong}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -410,7 +400,7 @@ export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,sta
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell padding="checkbox">
+                    {/* <TableCell padding="checkbox">
                       <Checkbox
                         color="primary"
                         checked={isItemSelected}
@@ -418,8 +408,9 @@ export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,sta
                           'aria-labelledby': labelId,
                         }}
                       />
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell
+                     align="right"
                       component="th"
                       id={labelId}
                       scope="row"
@@ -434,7 +425,8 @@ export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,sta
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{
-                        setPhuongDetail(row.idBHYT)
+                        setPhuongDetail(row.idBHYT);
+                        setPhuong(row.idBHYT);
                     }}>
                         Chi tiết
                     </Button>

@@ -128,12 +128,6 @@ const headCells = [
     label: 'Đến ngày',
   },
   {
-    id: 'dongTheo',
-    numeric: true,
-    disablePadding: false,
-    label: 'Đóng theo',
-  },
-  {
     id: 'ghiChu',
     numeric: true,
     disablePadding: false,
@@ -158,7 +152,7 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
+          {/* <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -166,7 +160,7 @@ function EnhancedTableHead(props) {
             inputProps={{
               'aria-label': 'select all desserts',
             }}
-          />
+          /> */}
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -302,7 +296,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TableQuan({setQuanDetail, response, setCaNhanTP, stateLT, setStateLT, selectedDate1, selectedDate2}) {
+export default function TableQuan({setQuanDetail, response, setCaNhanTP, stateLT, setStateLT, selectedDate1, selectedDate2, setQuan}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -439,13 +433,13 @@ export default function TableQuan({setQuanDetail, response, setCaNhanTP, stateLT
                     
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox
+                      {/* <Checkbox
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
                           'aria-labelledby': labelId,
                         }}
-                      />
+                      /> */}
                     </TableCell>
                     <TableCell
                       component="th"
@@ -462,11 +456,11 @@ export default function TableQuan({setQuanDetail, response, setCaNhanTP, stateLT
                     <TableCell align="right">{row.conNo}</TableCell>
                     <TableCell align="right">{dayjs(row.tuNgay).format('YYYY-MM-DD')}</TableCell>
                     <TableCell align="right">{dayjs(row.denNgay).format('YYYY-MM-DD')}</TableCell>
-                    <TableCell align="right">{row.dongTheo}</TableCell>
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{
-                        setQuanDetail(row.idBHYT)
+                        setQuanDetail(row.idBHYT);
+                        setQuan(row.idBHYT);
                     }}>
                         Chi tiết
                     </Button>

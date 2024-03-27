@@ -135,7 +135,7 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
+          {/* <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -143,7 +143,7 @@ function EnhancedTableHead(props) {
             inputProps={{
               'aria-label': 'select all desserts',
             }}
-          />
+          /> */}
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -350,9 +350,9 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
   );
 
   console.log("YYYYYYY", response)
-  const totalSL = response.CongTy?.reduce((acc, curr) => acc + curr.soLuong, 0) +  response.TruongHoc?.reduce((acc, curr) => acc + curr.soLuong, 0) + response.HoGiaDinh?.reduce((acc, curr) => acc + curr.soLuong, 0);
-  const totalDaDong = response.CongTy?.reduce((acc, curr) => acc + curr.daDong, 0) + response.TruongHoc?.reduce((acc, curr) => acc + curr.daDong, 0) + response.HoGiaDinh?.reduce((acc, curr) => acc + curr.daDong, 0);
-  const totalConNo = response.CongTy?.reduce((acc, curr) => acc + curr.conNo, 0)+ response.TruongHoc?.reduce((acc, curr) => acc + curr.conNo, 0) + response.HoGiaDinh?.reduce((acc, curr) => acc + curr.conNo, 0);
+  const totalSL = response?.CongTy?.reduce((acc, curr) => acc + curr.soLuong, 0) +  response?.TruongHoc?.reduce((acc, curr) => acc + curr.soLuong, 0) + response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.soLuong, 0);
+  const totalDaDong = response?.CongTy?.reduce((acc, curr) => acc + curr.daDong, 0) + response?.TruongHoc?.reduce((acc, curr) => acc + curr.daDong, 0) + response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.daDong, 0);
+  const totalConNo = response?.CongTy?.reduce((acc, curr) => acc + curr.conNo, 0)+ response?.TruongHoc?.reduce((acc, curr) => acc + curr.conNo, 0) + response?.HoGiaDinh?.reduce((acc, curr) => acc + curr.conNo, 0);
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -415,13 +415,13 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     sx={{ cursor: 'pointer' }}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox
+                      {/* <Checkbox
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
                           'aria-labelledby': labelId,
                         }}
-                      />
+                      /> */}
                     </TableCell>
 {/* // idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu */}
                     <TableCell
@@ -493,13 +493,13 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     sx={{ cursor: 'pointer' }}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox
+                      {/* <Checkbox
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
                           'aria-labelledby': labelId,
                         }}
-                      />
+                      /> */}
                     </TableCell>
 {/* // idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu */}
                     <TableCell
@@ -564,13 +564,13 @@ export default function TableToChuc({response, setCaNhanTP, setToChucDetail,stat
                     sx={{ cursor: 'pointer' }}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox
+                      {/* <Checkbox
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
                           'aria-labelledby': labelId,
                         }}
-                      />
+                      /> */}
                     </TableCell>
 {/* // idQuan, tenQuan, soLuong, mucDong, daDong, conNo, kiHan, ghiChu */}
                     <TableCell

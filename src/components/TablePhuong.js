@@ -152,7 +152,7 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
+          {/* <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -160,7 +160,7 @@ function EnhancedTableHead(props) {
             inputProps={{
               'aria-label': 'select all desserts',
             }}
-          />
+          /> */}
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -296,7 +296,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,stateLT, setStateLT, selectedDate1, selectedDate2}) {
+export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,stateLT, setStateLT, selectedDate1, selectedDate2, setPhuong}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -426,13 +426,13 @@ export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,sta
                     sx={{ cursor: 'pointer' }}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox
+                      {/* <Checkbox
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
                           'aria-labelledby': labelId,
                         }}
-                      />
+                      /> */}
                     </TableCell>
                     <TableCell
                       component="th"
@@ -452,7 +452,8 @@ export default function TablePhuong({setPhuongDetail, response , setCaNhanTP,sta
                     <TableCell align="right">{row.ghiChu}</TableCell>
                     <TableCell align="right" padding="button">
                     <Button variant="contained" color="primary" onClick={()=>{
-                        setPhuongDetail(row.idBHYT)
+                        setPhuongDetail(row.idBHYT);
+                        setPhuong(row.idBHYT);
                     }}>
                         Chi tiết
                     </Button>

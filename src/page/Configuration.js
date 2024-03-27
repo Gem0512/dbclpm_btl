@@ -18,7 +18,9 @@ export default function Configuration() {
     const [tiLeTV5, setTiLeTV5] = useState('');
     const [ngayHieuLuc, setNgayHieuLuc] = useState(dayjs().format('YYYY-MM-DD'));
     const [cauHinh, setCauHinh]= useState('');
-
+    useEffect(() => {
+        document.title = 'Cấu hình BHYT';
+      }, []);
     useEffect(() => {
         const fetchData = async () => {
           try {
